@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html class="" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>BudgetIn Unified Finance Card</title>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#ccff00",
+                        "primary-dark": "#b3e600",
+                        "accent-blue": "#b2f5ea",
+                        "background-light": "#ffffff",
+                        "background-off": "#f8f9fa",
+                        "text-main": "#1a1a1a",
+                        "text-muted": "#6b7280",
+                        "nav-bg": "#fcfef0",
+                    },
+                    fontFamily: {
+                        "display": ["Manrope", "sans-serif"]
+                    },
+                    borderRadius: { "DEFAULT": "1rem", "lg": "1.5rem", "xl": "2rem", "2xl": "2.5rem", "full": "9999px" },
+                    boxShadow: {
+                        'soft': '0 4px 20px -2px rgba(0, 0, 0, 0.05)',
+                        'card': '0 2px 10px rgba(0, 0, 0, 0.03)',
+                        'nav-glow': '0 10px 30px -5px rgba(0, 0, 0, 0.08)',
+                        'fab-shadow': '0 8px 16px -4px rgba(204, 255, 0, 0.4)',
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        body {
+            min-height: max(884px, 100dvh);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light font-display antialiased text-text-main transition-colors duration-300">
+<div class="relative flex min-h-screen w-full flex-col max-w-md mx-auto overflow-hidden pb-24 shadow-2xl bg-white">
+<header class="flex items-center justify-center px-5 pt-6 pb-2 relative">
+<button class="flex items-center gap-1 text-text-main">
+<h2 class="text-lg font-bold">January 2026</h2>
+<span class="material-symbols-outlined text-sm">keyboard_arrow_down</span>
+</button>
+</header>
+<main class="flex-1 overflow-y-auto hide-scrollbar">
+<section class="px-5 py-3 sticky top-0 bg-white z-20 pb-4">
+<div class="flex p-1 bg-gray-100 rounded-2xl">
+<button class="flex-1 py-2 px-4 bg-white rounded-xl shadow-sm text-center transition-all">
+<span class="text-sm font-bold text-gray-900">Goals</span>
+</button>
+<button class="flex-1 py-2 px-4 text-center transition-all hover:bg-white/50 rounded-xl">
+<span class="text-sm font-medium text-gray-500">Budget</span>
+</button>
+<button class="flex-1 py-2 px-4 text-center transition-all hover:bg-white/50 rounded-xl">
+<span class="text-sm font-medium text-gray-500">Bills</span>
+</button>
+</div>
+</section>
+<section class="px-5 py-2">
+<div class="flex justify-between items-center mb-4">
+<h3 class="text-lg font-bold text-gray-900">Your Saving Goals</h3>
+<button class="text-primary-dark font-bold text-sm flex items-center gap-1">
+<span class="material-symbols-outlined text-lg">add</span>
+                New Goal
+            </button>
+</div>
+<div class="grid grid-cols-2 gap-4">
+<div class="bg-white rounded-2xl p-4 shadow-card border border-gray-100 flex flex-col items-center gap-3 relative overflow-hidden group">
+<div class="absolute top-0 right-0 p-3">
+<span class="material-symbols-outlined text-gray-300 text-lg">more_horiz</span>
+</div>
+<div class="absolute top-0 left-0 p-3">
+<span class="bg-gray-100 text-[10px] font-bold px-2 py-0.5 rounded-full text-gray-600">14 months left</span>
+</div>
+<div class="relative h-20 w-20 flex items-center justify-center mt-6">
+<svg class="h-full w-full rotate-[-90deg]" viewBox="0 0 36 36">
+<path class="text-gray-100" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" stroke-width="3"></path>
+<path class="text-primary" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" stroke-dasharray="75, 100" stroke-linecap="round" stroke-width="3"></path>
+</svg>
+<div class="absolute inset-0 flex items-center justify-center flex-col">
+<span class="material-symbols-outlined text-gray-800 text-2xl">laptop_mac</span>
+<span class="text-[10px] font-bold text-gray-900 mt-1">75%</span>
+</div>
+</div>
+<div class="text-center w-full">
+<h4 class="text-sm font-bold text-gray-900 truncate">MacBook Pro</h4>
+<div class="flex flex-col items-center mt-1">
+<span class="text-[10px] text-gray-500">Target: Rp 24.000.000</span>
+<span class="text-[10px] font-bold text-red-500">Kurang Rp 6.000.000</span>
+</div>
+</div>
+<div class="w-full bg-gray-50 rounded-lg py-2 px-3 flex justify-between items-center mt-1">
+<span class="text-[9px] text-gray-400 font-medium">Saved</span>
+<span class="text-[10px] font-bold text-gray-900">Rp 18.000.000</span>
+</div>
+</div>
+<div class="bg-white rounded-2xl p-4 shadow-card border border-gray-100 flex flex-col items-center gap-3 relative overflow-hidden group">
+<div class="absolute top-0 right-0 p-3">
+<span class="material-symbols-outlined text-gray-300 text-lg">more_horiz</span>
+</div>
+<div class="absolute top-0 left-0 p-3">
+<span class="bg-red-50 text-[10px] font-bold px-2 py-0.5 rounded-full text-red-600">Urgent</span>
+</div>
+<div class="relative h-20 w-20 flex items-center justify-center mt-6">
+<svg class="h-full w-full rotate-[-90deg]" viewBox="0 0 36 36">
+<path class="text-gray-100" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" stroke-width="3"></path>
+<path class="text-primary" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" stroke-dasharray="45, 100" stroke-linecap="round" stroke-width="3"></path>
+</svg>
+<div class="absolute inset-0 flex items-center justify-center flex-col">
+<span class="material-symbols-outlined text-gray-800 text-2xl">health_and_safety</span>
+<span class="text-[10px] font-bold text-gray-900 mt-1">45%</span>
+</div>
+</div>
+<div class="text-center w-full">
+<h4 class="text-sm font-bold text-gray-900 truncate">Emergency Fund</h4>
+<div class="flex flex-col items-center mt-1">
+<span class="text-[10px] text-gray-500">Target: Rp 50.000.000</span>
+<span class="text-[10px] font-bold text-red-500">Kurang Rp 27.500.000</span>
+</div>
+</div>
+<div class="w-full bg-gray-50 rounded-lg py-2 px-3 flex justify-between items-center mt-1">
+<span class="text-[9px] text-gray-400 font-medium">Saved</span>
+<span class="text-[10px] font-bold text-gray-900">Rp 22.500.000</span>
+</div>
+</div>
+<div class="bg-white rounded-2xl p-4 shadow-card border border-gray-100 flex flex-col items-center gap-3 relative overflow-hidden group">
+<div class="absolute top-0 right-0 p-3">
+<span class="material-symbols-outlined text-gray-300 text-lg">more_horiz</span>
+</div>
+<div class="absolute top-0 left-0 p-3">
+<span class="bg-gray-100 text-[10px] font-bold px-2 py-0.5 rounded-full text-gray-600">8 months left</span>
+</div>
+<div class="relative h-20 w-20 flex items-center justify-center mt-6">
+<svg class="h-full w-full rotate-[-90deg]" viewBox="0 0 36 36">
+<path class="text-gray-100" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" stroke-width="3"></path>
+<path class="text-primary" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" stroke-dasharray="20, 100" stroke-linecap="round" stroke-width="3"></path>
+</svg>
+<div class="absolute inset-0 flex items-center justify-center flex-col">
+<span class="material-symbols-outlined text-gray-800 text-2xl">flight</span>
+<span class="text-[10px] font-bold text-gray-900 mt-1">20%</span>
+</div>
+</div>
+<div class="text-center w-full">
+<h4 class="text-sm font-bold text-gray-900 truncate">Japan Trip</h4>
+<div class="flex flex-col items-center mt-1">
+<span class="text-[10px] text-gray-500">Target: Rp 35.000.000</span>
+<span class="text-[10px] font-bold text-red-500">Kurang Rp 28.000.000</span>
+</div>
+</div>
+<div class="w-full bg-gray-50 rounded-lg py-2 px-3 flex justify-between items-center mt-1">
+<span class="text-[9px] text-gray-400 font-medium">Saved</span>
+<span class="text-[10px] font-bold text-gray-900">Rp 7.000.000</span>
+</div>
+</div>
+<div class="bg-white rounded-2xl p-4 shadow-card border border-gray-100 flex flex-col items-center gap-3 relative overflow-hidden group">
+<div class="absolute top-0 right-0 p-3">
+<span class="material-symbols-outlined text-gray-300 text-lg">more_horiz</span>
+</div>
+<div class="absolute top-0 left-0 p-3">
+<span class="bg-gray-100 text-[10px] font-bold px-2 py-0.5 rounded-full text-gray-600">3 years left</span>
+</div>
+<div class="relative h-20 w-20 flex items-center justify-center mt-6">
+<svg class="h-full w-full rotate-[-90deg]" viewBox="0 0 36 36">
+<path class="text-gray-100" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" stroke-width="3"></path>
+<path class="text-primary" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" stroke-dasharray="10, 100" stroke-linecap="round" stroke-width="3"></path>
+</svg>
+<div class="absolute inset-0 flex items-center justify-center flex-col">
+<span class="material-symbols-outlined text-gray-800 text-2xl">directions_car</span>
+<span class="text-[10px] font-bold text-gray-900 mt-1">10%</span>
+</div>
+</div>
+<div class="text-center w-full">
+<h4 class="text-sm font-bold text-gray-900 truncate">Tesla Model 3</h4>
+<div class="flex flex-col items-center mt-1">
+<span class="text-[10px] text-gray-500">Target: Rp 800.000.000</span>
+<span class="text-[10px] font-bold text-red-500">Kurang Rp 720.000.000</span>
+</div>
+</div>
+<div class="w-full bg-gray-50 rounded-lg py-2 px-3 flex justify-between items-center mt-1">
+<span class="text-[9px] text-gray-400 font-medium">Saved</span>
+<span class="text-[10px] font-bold text-gray-900">Rp 80.000.000</span>
+</div>
+</div>
+<div class="bg-gray-50 rounded-2xl p-4 border border-dashed border-gray-300 flex flex-col items-center justify-center gap-3 min-h-[220px] cursor-pointer hover:bg-gray-100 transition-colors">
+<div class="h-14 w-14 rounded-full bg-white flex items-center justify-center shadow-sm">
+<span class="material-symbols-outlined text-gray-400 text-2xl">add</span>
+</div>
+<p class="text-xs font-bold text-gray-500">Create New Goal</p>
+</div>
+</div>
+</section>
+<section class="px-5 py-4">
+<div class="bg-primary/10 rounded-2xl p-5 flex items-start gap-4">
+<div class="h-10 w-10 rounded-full bg-primary flex items-center justify-center shrink-0 text-black">
+<span class="material-symbols-outlined">tips_and_updates</span>
+</div>
+<div>
+<h4 class="text-sm font-bold text-gray-900 mb-1">Smart Tip</h4>
+<p class="text-xs text-gray-600 leading-relaxed">
+                    Based on your spending, you can save an extra <span class="font-bold text-gray-900">Rp 500.000</span> this month by cutting down on coffee expenses.
+                </p>
+</div>
+</div>
+</section>
+<div class="h-28"></div>
+</main>
+<div class="absolute bottom-6 left-1/2 -translate-x-1/2 z-50 w-full px-5 max-w-[360px]">
+<nav class="bg-nav-bg rounded-[40px] px-2 py-2 flex items-center justify-between shadow-nav-glow border border-gray-200 relative">
+<div class="flex items-center justify-around flex-1">
+<button class="group flex flex-col items-center gap-0.5 min-w-[50px] py-1">
+<span class="material-symbols-outlined text-gray-400 group-hover:text-gray-600 transition-colors text-[24px] font-normal" style="font-variation-settings: 'FILL' 0;">home</span>
+<span class="text-[9px] font-bold text-gray-400 group-hover:text-gray-600 transition-colors">Home</span>
+</button>
+<button class="group flex flex-col items-center gap-0.5 min-w-[50px] py-1">
+<span class="material-symbols-outlined text-primary-dark transition-colors text-[24px] font-normal" style="font-variation-settings: 'FILL' 1;">account_balance_wallet</span>
+<span class="text-[9px] font-bold text-primary-dark transition-colors">Budget</span>
+</button>
+</div>
+<div class="relative shrink-0 -top-6">
+<button class="h-14 w-14 bg-primary rounded-full flex items-center justify-center shadow-fab-shadow hover:scale-105 active:scale-95 transition-all border-[4px] border-white z-10">
+<span class="material-symbols-outlined text-black text-[28px] font-bold">add</span>
+</button>
+</div>
+<div class="flex items-center justify-around flex-1">
+<button class="group flex flex-col items-center gap-0.5 min-w-[50px] py-1">
+<span class="material-symbols-outlined text-gray-400 group-hover:text-gray-600 transition-colors text-[24px] font-normal" style="font-variation-settings: 'FILL' 0;">chat_bubble</span>
+<span class="text-[9px] font-bold text-gray-400 group-hover:text-gray-600 transition-colors">Consult</span>
+</button>
+<button class="group flex flex-col items-center gap-0.5 min-w-[50px] py-1">
+<span class="material-symbols-outlined text-gray-400 group-hover:text-gray-600 transition-colors text-[24px] font-normal" style="font-variation-settings: 'FILL' 0;">work</span>
+<span class="text-[9px] font-bold text-gray-400 group-hover:text-gray-600 transition-colors">Asset</span>
+</button>
+</div>
+</nav>
+</div>
+</div>
+</body></html>

@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html class="" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>BudgetIn Consultant List Refined V3</title>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#ccff00",
+                        "primary-dark": "#b3e600",
+                        "accent-blue": "#b2f5ea",
+                        "background-light": "#ffffff",
+                        "background-off": "#f8f9fa",
+                        "text-main": "#1a1a1a",
+                        "text-muted": "#6b7280",
+                        "nav-bg": "#fcfef0",
+                    },
+                    fontFamily: {
+                        "display": ["Manrope", "sans-serif"]
+                    },
+                    borderRadius: { "DEFAULT": "1rem", "lg": "1.5rem", "xl": "2rem", "2xl": "2.5rem", "full": "9999px" },
+                    boxShadow: {
+                        'soft': '0 4px 20px -2px rgba(0, 0, 0, 0.05)',
+                        'card': '0 2px 10px rgba(0, 0, 0, 0.03)',
+                        'nav-glow': '0 10px 30px -5px rgba(0, 0, 0, 0.08)',
+                        'fab-shadow': '0 8px 16px -4px rgba(204, 255, 0, 0.4)',
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        body {
+            min-height: max(884px, 100dvh);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light font-display antialiased text-text-main transition-colors duration-300">
+<div class="relative flex min-h-screen w-full flex-col max-w-md mx-auto overflow-hidden pb-24 shadow-2xl bg-white">
+<header class="flex items-center justify-between px-5 pt-6 pb-2 relative z-10 bg-white">
+<div class="w-8"></div>
+<h2 class="text-lg font-bold text-text-main text-center flex-1">Consultation</h2>
+<div class="flex items-center justify-end w-8">
+<button class="flex items-center justify-center h-8 w-8 rounded-full hover:bg-gray-100 transition-colors">
+<span class="material-symbols-outlined text-gray-700">filter_list</span>
+</button>
+</div>
+</header>
+<main class="flex-1 overflow-y-auto hide-scrollbar pt-2">
+<section class="px-5 pb-3">
+<div class="relative">
+<span class="absolute inset-y-0 left-0 flex items-center pl-3">
+<span class="material-symbols-outlined text-gray-400 text-xl">search</span>
+</span>
+<input class="w-full py-3 pl-10 pr-4 text-sm bg-gray-50 border-none rounded-xl focus:ring-2 focus:ring-primary/50 text-gray-700 placeholder-gray-400 shadow-sm" placeholder="Search consultant or location..." type="text"/>
+</div>
+</section>
+<section class="pl-5 pb-4">
+<div class="flex gap-2 overflow-x-auto hide-scrollbar pr-5">
+<button class="px-4 py-1.5 rounded-full bg-black text-white text-xs font-semibold whitespace-nowrap shadow-sm">All</button>
+<button class="px-4 py-1.5 rounded-full bg-gray-100 text-gray-600 text-xs font-semibold whitespace-nowrap border border-gray-200 hover:bg-gray-200 transition-colors">Tax</button>
+<button class="px-4 py-1.5 rounded-full bg-gray-100 text-gray-600 text-xs font-semibold whitespace-nowrap border border-gray-200 hover:bg-gray-200 transition-colors">Investment</button>
+<button class="px-4 py-1.5 rounded-full bg-gray-100 text-gray-600 text-xs font-semibold whitespace-nowrap border border-gray-200 hover:bg-gray-200 transition-colors">Insurance</button>
+<button class="px-4 py-1.5 rounded-full bg-gray-100 text-gray-600 text-xs font-semibold whitespace-nowrap border border-gray-200 hover:bg-gray-200 transition-colors">Debt</button>
+<button class="px-4 py-1.5 rounded-full bg-gray-100 text-gray-600 text-xs font-semibold whitespace-nowrap border border-gray-200 hover:bg-gray-200 transition-colors">Business</button>
+</div>
+</section>
+<section class="px-5 pb-4">
+<div class="bg-[#FCFEF0] p-4 rounded-2xl shadow-card flex flex-col gap-3">
+<div class="flex flex-col gap-1">
+<h3 class="text-sm font-bold text-[#1a1a1a]">Bingung mencari konsultan yang cocok?</h3>
+<p class="text-xs text-gray-500 font-medium leading-relaxed">Kami akan membantu kamu menemukan konsultan yang sesuai preferensi dan kondisi kamu</p>
+</div>
+<div class="flex justify-end">
+<button class="bg-primary hover:bg-primary-dark active:scale-95 transition-all text-black text-xs font-bold py-2 px-4 rounded-xl shadow-sm flex items-center gap-1.5">
+<span>Coba Fitur Match Expert</span>
+<span class="material-symbols-outlined text-[16px]">arrow_forward</span>
+</button>
+</div>
+</div>
+</section>
+<section class="px-5 space-y-3 pb-24">
+<div class="bg-white p-3.5 rounded-2xl border border-gray-200 shadow-card hover:shadow-md transition-all flex flex-col gap-2.5">
+<div class="flex justify-between items-start gap-3">
+<div class="relative shrink-0">
+<div class="h-14 w-14 rounded-full bg-cover bg-center border border-gray-100" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuBjtx7h7FjDd3wyfWqRg4PDPSXr4X6ALJw0d8Tr6LDDMwno2KLfdLKfww7Xb_x15wvkXDXUVkXCmS4v-ZpEcM6wFJEFv0qanyMGTPSpMgTonlCwZFeFKQ_17dM5LYGc-AwdSGrLe7l7bQY0LSUvUnrNMPpqssuy7RF3G8Dq65eDnT2TfcOJyKbDXQSDpNlmwA1T6SnyRAKkKxAqa5jyuibGs8cMjvUaZqN4_1NtcPUFDkCZaPe57smpr4dkzg_86MvK0t0T9oLEN_ny");'></div>
+<div class="absolute -bottom-1 -right-1 bg-white rounded-full p-0.5 shadow-sm">
+<div class="bg-primary text-black text-[9px] font-bold px-1.5 py-0.5 rounded-full whitespace-nowrap">12+ Yrs</div>
+</div>
+</div>
+<div class="flex flex-col flex-1 min-w-0 gap-0.5">
+<div class="flex justify-between items-start">
+<div>
+<h4 class="text-sm font-bold text-gray-900 truncate">Sarah Jenkins</h4>
+<span class="text-[11px] font-semibold text-teal-700 block mt-0.5">Senior Tax Consultant</span>
+</div>
+<div class="flex flex-col items-end gap-0.5">
+<div class="flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px] text-yellow-500 fill-1">star</span>
+<span class="text-xs font-bold text-gray-800">4.9</span>
+</div>
+<span class="text-[10px] text-gray-400 font-medium">124 Reviews</span>
+</div>
+</div>
+<div class="flex items-center gap-1 mt-1">
+<span class="material-symbols-outlined text-gray-400 text-[12px]">location_on</span>
+<span class="text-[10px] text-gray-500 font-medium">Jakarta, Indonesia</span>
+</div>
+</div>
+</div>
+<div class="flex flex-wrap gap-1.5">
+<span class="px-2 py-0.5 rounded bg-gray-50 text-[10px] font-medium text-gray-600 border border-gray-100">Corp. Tax</span>
+<span class="px-2 py-0.5 rounded bg-gray-50 text-[10px] font-medium text-gray-600 border border-gray-100">Estate Planning</span>
+<span class="px-2 py-0.5 rounded bg-gray-50 text-[10px] font-medium text-gray-600 border border-gray-100">Audit</span>
+</div>
+<div class="w-full h-px border-t border-dashed border-gray-200"></div>
+<div class="flex items-center justify-between">
+<div class="flex flex-col">
+<span class="text-[10px] text-gray-400">Starting from</span>
+<div class="flex items-baseline gap-1">
+<span class="text-sm font-bold text-gray-900">Rp 250.000</span>
+<span class="text-[10px] font-medium text-gray-400">/hr</span>
+</div>
+</div>
+<button class="bg-primary hover:bg-primary-dark text-black text-xs font-bold py-2 px-4 rounded-xl transition-colors shadow-sm flex items-center gap-1.5">
+<span>Schedule</span>
+<span class="material-symbols-outlined text-[16px]">calendar_today</span>
+</button>
+</div>
+</div>
+<div class="bg-white p-3.5 rounded-2xl border border-gray-200 shadow-card hover:shadow-md transition-all flex flex-col gap-2.5">
+<div class="flex justify-between items-start gap-3">
+<div class="relative shrink-0">
+<div class="h-14 w-14 rounded-full bg-cover bg-center border border-gray-100" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuC2p3YP7mMtieAfKpOlzo_DWFwc0EMc6UemmRUrAyBDpaSXCZiQS9sIs38ktOvZdykPm3F1-taGHqHoNQNaqVNvF_3CzwZvhE63KpyVq98ujzATdb6Q8P8QtNB3-Q_g8G7omklC8fEsT9e_Zc1u4pJhBUhX8rvPs69MV0XfT7nTrbKtdpQtSfUV33q8eGvGgubKqbjQy1zjEdMyxlONzl4FLN-A1yCM49fNev0fuxKxJTnWgjS690puSfrQO32fs_ljkaajPN-UZ1Iq");'></div>
+<div class="absolute -bottom-1 -right-1 bg-white rounded-full p-0.5 shadow-sm">
+<div class="bg-gray-100 text-gray-600 text-[9px] font-bold px-1.5 py-0.5 rounded-full whitespace-nowrap">8+ Yrs</div>
+</div>
+</div>
+<div class="flex flex-col flex-1 min-w-0 gap-0.5">
+<div class="flex justify-between items-start">
+<div>
+<h4 class="text-sm font-bold text-gray-900 truncate">Mike Thompson</h4>
+<span class="text-[11px] font-semibold text-blue-700 block mt-0.5">Financial Planner</span>
+</div>
+<div class="flex flex-col items-end gap-0.5">
+<div class="flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px] text-yellow-500 fill-1">star</span>
+<span class="text-xs font-bold text-gray-800">4.8</span>
+</div>
+<span class="text-[10px] text-gray-400 font-medium">89 Reviews</span>
+</div>
+</div>
+<div class="flex items-center gap-1 mt-1">
+<span class="material-symbols-outlined text-gray-400 text-[12px]">location_on</span>
+<span class="text-[10px] text-gray-500 font-medium">Jakarta, Indonesia</span>
+</div>
+</div>
+</div>
+<div class="flex flex-wrap gap-1.5">
+<span class="px-2 py-0.5 rounded bg-gray-50 text-[10px] font-medium text-gray-600 border border-gray-100">Wealth Mgmt</span>
+<span class="px-2 py-0.5 rounded bg-gray-50 text-[10px] font-medium text-gray-600 border border-gray-100">Retirement</span>
+</div>
+<div class="w-full h-px border-t border-dashed border-gray-200"></div>
+<div class="flex items-center justify-between">
+<div class="flex flex-col">
+<span class="text-[10px] text-gray-400">Starting from</span>
+<div class="flex items-baseline gap-1">
+<span class="text-sm font-bold text-gray-900">Rp 185.000</span>
+<span class="text-[10px] font-medium text-gray-400">/hr</span>
+</div>
+</div>
+<button class="bg-primary hover:bg-primary-dark text-black text-xs font-bold py-2 px-4 rounded-xl transition-colors shadow-sm flex items-center gap-1.5">
+<span>Schedule</span>
+<span class="material-symbols-outlined text-[16px]">calendar_today</span>
+</button>
+</div>
+</div>
+<div class="bg-white p-3.5 rounded-2xl border border-gray-200 shadow-card hover:shadow-md transition-all flex flex-col gap-2.5">
+<div class="flex justify-between items-start gap-3">
+<div class="relative shrink-0">
+<div class="h-14 w-14 rounded-full bg-gray-50 border border-gray-100 flex items-center justify-center text-gray-300">
+<span class="material-symbols-outlined text-3xl">person</span>
+</div>
+<div class="absolute -bottom-1 -right-1 bg-white rounded-full p-0.5 shadow-sm">
+<div class="bg-gray-100 text-gray-600 text-[9px] font-bold px-1.5 py-0.5 rounded-full whitespace-nowrap">5+ Yrs</div>
+</div>
+</div>
+<div class="flex flex-col flex-1 min-w-0 gap-0.5">
+<div class="flex justify-between items-start">
+<div>
+<h4 class="text-sm font-bold text-gray-900 truncate">Emily Chen</h4>
+<span class="text-[11px] font-semibold text-purple-700 block mt-0.5">Crypto Analyst</span>
+</div>
+<div class="flex flex-col items-end gap-0.5">
+<div class="flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px] text-yellow-500 fill-1">star</span>
+<span class="text-xs font-bold text-gray-800">5.0</span>
+</div>
+<span class="text-[10px] text-gray-400 font-medium">42 Reviews</span>
+</div>
+</div>
+<div class="flex items-center gap-1 mt-1">
+<span class="material-symbols-outlined text-gray-400 text-[12px]">location_on</span>
+<span class="text-[10px] text-gray-500 font-medium">Banten, Indonesia</span>
+</div>
+</div>
+</div>
+<div class="flex flex-wrap gap-1.5">
+<span class="px-2 py-0.5 rounded bg-gray-50 text-[10px] font-medium text-gray-600 border border-gray-100">Blockchain</span>
+<span class="px-2 py-0.5 rounded bg-gray-50 text-[10px] font-medium text-gray-600 border border-gray-100">DeFi Strategy</span>
+<span class="px-2 py-0.5 rounded bg-gray-50 text-[10px] font-medium text-gray-600 border border-gray-100">NFTs</span>
+</div>
+<div class="w-full h-px border-t border-dashed border-gray-200"></div>
+<div class="flex items-center justify-between">
+<div class="flex flex-col">
+<span class="text-[10px] text-gray-400">Starting from</span>
+<div class="flex items-baseline gap-1">
+<span class="text-sm font-bold text-gray-900">Rp 300.000</span>
+<span class="text-[10px] font-medium text-gray-400">/hr</span>
+</div>
+</div>
+<button class="bg-primary hover:bg-primary-dark text-black text-xs font-bold py-2 px-4 rounded-xl transition-colors shadow-sm flex items-center gap-1.5">
+<span>Schedule</span>
+<span class="material-symbols-outlined text-[16px]">calendar_today</span>
+</button>
+</div>
+</div>
+<div class="bg-white p-3.5 rounded-2xl border border-gray-200 shadow-card hover:shadow-md transition-all flex flex-col gap-2.5 opacity-70">
+<div class="flex justify-between items-start gap-3">
+<div class="relative shrink-0">
+<div class="h-14 w-14 rounded-full bg-cover bg-center border border-gray-100" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuAIKaoBRhdXgBeYrStpMpfSpTsNZcl0ZkVvRjNWVurvALdDgzMR_R6hmVXE6TVpgDfcglXk9xRSxaAU3cx0UcjghUKFbiawPmuuOxVFslF-5fBkaFGVGeqCwZ-0oAF9LlYNElLhopYHITZnF2-RCp5-knqdhN654KyoYwT3FINFCYUxnRvdojyZIi5mSxre9d-B-2NJO3GyFB33VUp8DpuVnlyyOZtuZoxBpXxgcHoHcfMIsokI4LIeEvXNJZcA_mlRZ7D0ZbkcNUi-");'></div>
+<div class="absolute -bottom-1 -right-1 bg-white rounded-full p-0.5 shadow-sm">
+<div class="bg-gray-100 text-gray-600 text-[9px] font-bold px-1.5 py-0.5 rounded-full whitespace-nowrap">15+ Yrs</div>
+</div>
+</div>
+<div class="flex flex-col flex-1 min-w-0 gap-0.5">
+<div class="flex justify-between items-start">
+<div>
+<h4 class="text-sm font-bold text-gray-900 truncate">David Ross</h4>
+<span class="text-[11px] font-semibold text-orange-700 block mt-0.5">Debt Manager</span>
+</div>
+<div class="flex flex-col items-end gap-0.5">
+<div class="flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px] text-yellow-500 fill-1">star</span>
+<span class="text-xs font-bold text-gray-800">4.7</span>
+</div>
+<span class="text-[10px] text-gray-400 font-medium">156 Reviews</span>
+</div>
+</div>
+<div class="flex items-center gap-1 mt-1">
+<span class="material-symbols-outlined text-gray-400 text-[12px]">location_on</span>
+<span class="text-[10px] text-gray-500 font-medium">Jakarta, Indonesia</span>
+</div>
+</div>
+</div>
+<div class="flex flex-wrap gap-1.5">
+<span class="px-2 py-0.5 rounded bg-gray-50 text-[10px] font-medium text-gray-600 border border-gray-100">Consolidation</span>
+<span class="px-2 py-0.5 rounded bg-gray-50 text-[10px] font-medium text-gray-600 border border-gray-100">Bankruptcy</span>
+</div>
+<div class="w-full h-px border-t border-dashed border-gray-200"></div>
+<div class="flex items-center justify-between">
+<div class="flex flex-col">
+<span class="text-[10px] text-gray-400">Starting from</span>
+<div class="flex items-baseline gap-1">
+<span class="text-sm font-bold text-gray-900">Rp 200.000</span>
+<span class="text-[10px] font-medium text-gray-400">/hr</span>
+</div>
+</div>
+<button class="bg-gray-100 text-gray-400 border border-gray-200 text-xs font-bold py-2 px-4 rounded-xl cursor-not-allowed flex items-center gap-1.5">
+<span>Fully Booked</span>
+<span class="material-symbols-outlined text-[16px]">event_busy</span>
+</button>
+</div>
+</div>
+</section>
+</main>
+<div class="absolute bottom-6 left-1/2 -translate-x-1/2 z-50 w-full px-5 max-w-[360px]">
+<nav class="bg-nav-bg rounded-[40px] px-2 py-2 flex items-center justify-between shadow-nav-glow border border-gray-200 relative">
+<div class="flex items-center justify-around flex-1">
+<button class="group flex flex-col items-center gap-0.5 min-w-[50px] py-1">
+<span class="material-symbols-outlined text-gray-400 group-hover:text-gray-600 transition-colors text-[24px] font-normal" style="font-variation-settings: 'FILL' 0;">home</span>
+<span class="text-[9px] font-bold text-gray-400 group-hover:text-gray-600 transition-colors">Home</span>
+</button>
+<button class="group flex flex-col items-center gap-0.5 min-w-[50px] py-1">
+<span class="material-symbols-outlined text-gray-400 group-hover:text-gray-600 transition-colors text-[24px] font-normal" style="font-variation-settings: 'FILL' 0;">account_balance_wallet</span>
+<span class="text-[9px] font-bold text-gray-400 group-hover:text-gray-600 transition-colors">Budget</span>
+</button>
+</div>
+<div class="relative shrink-0 -top-6">
+<button class="h-14 w-14 bg-primary rounded-full flex items-center justify-center shadow-fab-shadow hover:scale-105 active:scale-95 transition-all border-[4px] border-white z-10">
+<span class="material-symbols-outlined text-black text-[28px] font-bold">add</span>
+</button>
+</div>
+<div class="flex items-center justify-around flex-1">
+<button class="group flex flex-col items-center gap-0.5 min-w-[50px] py-1">
+<span class="material-symbols-outlined text-primary drop-shadow-[0_0_8px_rgba(204,255,0,0.5)] text-[24px] font-normal" style="font-variation-settings: 'FILL' 1;">chat_bubble</span>
+<span class="text-[9px] font-bold text-primary drop-shadow-[0_0_8px_rgba(204,255,0,0.5)]">Consult</span>
+</button>
+<button class="group flex flex-col items-center gap-0.5 min-w-[50px] py-1">
+<span class="material-symbols-outlined text-gray-400 group-hover:text-gray-600 transition-colors text-[24px] font-normal" style="font-variation-settings: 'FILL' 0;">work</span>
+<span class="text-[9px] font-bold text-gray-400 group-hover:text-gray-600 transition-colors">Asset</span>
+</button>
+</div>
+</nav>
+</div>
+</div>
+</body></html>

@@ -1,0 +1,1065 @@
+# Frontend Delivery Strategy
+
+| Field | Value |
+| --- | --- |
+| Project | HaloFin |
+| Document Version | 1.1 |
+| Status | Active For `mobile_frontend` |
+| Last Updated | 2026-03-09 |
+
+## 1. Purpose
+
+Dokumen ini menjadi panduan utama untuk strategi frontend-first HaloFin. Fokus saat ini adalah menyelesaikan `mobile_frontend` terlebih dahulu sebelum backend implementation dimulai.
+
+## 2. AppSurface Matrix
+
+| AppSurface | UI Goal | Delivery Order | Current Action |
+| --- | --- | --- | --- |
+| `mobile` | End-user product experience utama | 1 | Active |
+| `admin` | Internal operations and monitoring | 2 | Not started |
+| `consultant` | Consultant workflow and session handling | 3 | Not started |
+| `landing` | Business introduction and acquisition | 4 | Not started |
+
+## 3. Frontend-First Rules
+
+1. Selama phase frontend-only, tim hanya mengerjakan UI, state, flow, navigation, empty state, loading state, dan error state.
+2. Backend implementation tidak boleh disentuh pada phase ini.
+3. Semua kebutuhan data eksternal harus dimodelkan sebagai MockContract.
+4. Real API integration baru dimulai setelah seluruh frontend flow app surface aktif disetujui.
+
+## 4. Delivery Order By App
+
+```mermaid
+flowchart LR
+    A["mobile_frontend"] --> B["mobile approved"]
+    B --> C["admin_frontend"]
+    C --> D["admin approved"]
+    D --> E["consultant_frontend"]
+    E --> F["consultant approved"]
+    F --> G["landing_frontend"]
+```
+
+## 5. Mobile Frontend Scope
+
+Pada fase aktif `mobile_frontend`, minimal yang harus selesai:
+
+1. Authentication screens mock state
+2. Wallet and balance views
+3. Manual transaction entry screens
+4. AI draft entry screens
+5. Draft review screens
+6. Recommendation and wallet detail screens
+7. Consultant listing and booking screens
+8. Core empty, loading, success, and error states
+
+## 6. Mock State Strategy
+
+### Approved Mock Sources
+
+1. Local JSON fixtures
+2. Fake repositories
+3. In-memory service layer
+4. Static response builders
+
+### Mock Contract Requirements
+
+1. Harus cukup jelas untuk memodelkan request, response, loading, success, dan error.
+2. Harus cukup stabil sebelum backend phase dimulai.
+3. Harus dapat dipetakan ke real API tanpa mengubah intent UX utama.
+
+```mermaid
+flowchart TD
+    Fixture["Local fixture / mock JSON"] --> Repo["Fake repository"]
+    Repo --> State["View model or controller state"]
+    State --> UI["Rendered screen"]
+    UI --> Review["UX review and approval"]
+    Review --> Contract["MockContract frozen for backend phase"]
+```
+
+## 7. Design System And Shared UI Principles
+
+1. Gunakan pola layout, spacing, dan typography yang konsisten lintas mobile dan web.
+2. Pisahkan presentational component dari flow-specific container bila masuk akal.
+3. Prioritaskan readability state machine dan screen flow dibanding premature abstraction.
+4. Semua critical screen harus memiliki empty, loading, success, dan error state.
+
+## 8. Contract-First Frontend Conventions
+
+1. Semua data dependency untuk screen utama harus dideklarasikan sebagai MockContract.
+2. Nama field dan shape data harus disepakati sebelum backend phase dimulai.
+3. Jika frontend menemukan kebutuhan data baru, update MockContract terlebih dahulu, bukan langsung mengasumsikan API.
+
+## 9. Definition Of Done: Frontend
+
+Frontend untuk app surface tertentu dianggap selesai bila:
+
+1. Seluruh flow utama dapat dijalankan end-to-end dengan mock data.
+2. Navigation final untuk app surface tersebut sudah stabil.
+3. Semua state penting sudah terwakili.
+4. MockContract utama sudah disetujui.
+5. Tidak ada blocker UX besar yang tersisa.
+
+## 10. Frontend Risks
+
+1. MockContract yang terlalu kasar akan menyulitkan backend mapping.
+2. Terlalu banyak improvisasi visual tanpa flow approval dapat memperlambat backend phase.
+3. Memulai app surface lain sebelum mobile selesai akan memecah fokus dan meningkatkan rework.
+
+## 11. Design Source Inventory
+
+Bagian slicing UI mobile pada dokumen ini mengacu langsung ke aset lokal yang sudah tersedia di `docs/assets/ui_halofin`.
+
+| Screen Key | Asset Folder | Current Role |
+| --- | --- | --- |
+| `screen_home` | `Halofin Home` | Dashboard utama dan pintu masuk fitur lain |
+| `screen_consult_list` | `Halofin Consult` | Listing konsultan dan discovery |
+| `screen_consult_detail` | `Halofin Consult Detail` | Detail profil konsultan dan CTA booking |
+| `screen_transaction_entry` | `Halofin trannsaction` | Form pencatatan transaksi |
+| `screen_wallet` | `Halofin Wallet` | Distribusi aset dan daftar wallet |
+| `screen_budget` | `Halofin Budget` | Budget summary dan kategori budget |
+| `screen_goals` | `Halofin Goals` | Saving goals overview |
+| `screen_bills` | `Halofin Bills` | Bills overview dan payment list |
+| `screen_transaction_history` | `Halofin Transaction History` | Riwayat transaksi terfilter |
+
+Aturan sumber desain:
+
+1. Nama folder lokal dipakai sebagai referensi operasional utama.
+2. `screen.png` menjadi acuan struktur layout utama.
+3. `code.html` dipakai untuk membantu label, section naming, dan pola UI.
+4. Jika title HTML terlihat generik atau legacy, struktur visual PNG tetap menjadi acuan utama.
+5. Jika ada label user-facing yang sudah diputuskan berubah, dokumentasi boleh menormalkan label final tanpa mengubah aset sumber.
+
+## 12. Standard Slicing Rules
+
+### Global Visual Patterns
+
+1. Font family utama adalah `Manrope`.
+2. Active state dan CTA utama memakai aksen lime terang.
+3. Card, chip, dan tab memakai sudut membulat besar.
+4. Bottom navigation konsisten muncul pada screen utama.
+5. Tema dominan adalah light theme dengan soft shadow dan spacing longgar.
+6. Hierarki visual mengandalkan hero card besar di atas, lalu section modular ke bawah.
+
+### Reusable Mobile Primitives
+
+1. App header variants
+2. Segmented tab switcher
+3. Filter chips
+4. Summary or hero cards
+5. List item cards
+6. Consultant cards
+7. Wallet cards
+8. Goal or budget progress cards
+9. Bottom nav item
+10. Sticky CTA bar
+
+### Naming Convention For Slicing
+
+1. `screen_` untuk level screen.
+2. `section_` untuk block layout besar dalam satu screen.
+3. `component_` untuk reusable UI unit.
+4. `state_` untuk representasi loading, empty, success, atau error.
+
+### Frontend-Only Constraint
+
+1. Dokumen slicing ini hanya membahas UI structure, local state, navigation, dan mock contracts.
+2. Tidak ada backend implementation detail.
+3. Tidak ada real auth integration.
+4. Tidak ada provider integration detail.
+5. Label final bottom nav untuk item terakhir adalah `Wallet`, walau aset sumber lama masih menulis `Asset`.
+
+## 13. Mobile Route Map And Feature Map
+
+### Mobile Route Keys
+
+| MobileRouteKey | Main Feature |
+| --- | --- |
+| `home` | Dashboard dan summary entry point |
+| `consult_list` | Discovery konsultan |
+| `consult_detail` | Detail konsultan |
+| `transaction_entry` | Catat transaksi |
+| `wallet` | Wallet overview with asset distribution |
+| `budget` | Budget monitoring |
+| `goals` | Saving goals |
+| `bills` | Bills tracking |
+| `transaction_history` | Riwayat transaksi |
+
+### Route Map
+
+```mermaid
+flowchart TD
+    Home["home"] --> TransactionEntry["transaction_entry"]
+    Home --> TransactionHistory["transaction_history"]
+    Home --> ConsultList["consult_list"]
+    Home --> Wallet["wallet"]
+    Home --> Budget["budget"]
+    Budget --> Goals["goals"]
+    Budget --> Bills["bills"]
+    ConsultList --> ConsultDetail["consult_detail"]
+```
+
+Diagram di atas adalah route map desain yang sudah tervalidasi secara visual, bukan real router implementation.
+
+### Screen-To-Feature Map
+
+| Feature Group | Screen Key |
+| --- | --- |
+| Dashboard | `screen_home` |
+| Consult discovery | `screen_consult_list`, `screen_consult_detail` |
+| Transaction flow | `screen_transaction_entry`, `screen_transaction_history` |
+| Wallet and asset distribution | `screen_wallet` |
+| Financial planning | `screen_budget`, `screen_goals`, `screen_bills` |
+
+## 14. Documentation Types For Mobile Slicing
+
+### `MobileScreenSpec`
+
+| Field | Meaning |
+| --- | --- |
+| `screen_key` | Identifier screen pada dokumen frontend |
+| `asset_folder` | Folder sumber desain lokal |
+| `purpose` | Fungsi utama screen |
+| `primary_sections` | Bagian besar yang wajib ada pada screen |
+| `reusable_components` | Komponen yang diharapkan dipakai ulang |
+| `mock_data_dependencies` | Data mock minimum untuk render screen |
+| `status` | Status implementasi atau kesiapan desain |
+
+### `SliceUnit`
+
+| SliceUnit | Meaning |
+| --- | --- |
+| `header` | App bar atau top context area |
+| `hero_card` | Card utama penarik fokus |
+| `tabs_or_chips` | Segment control atau filter chip |
+| `content_list` | List, grid, atau kumpulan item |
+| `cta` | Call to action utama |
+| `bottom_nav` | Navigasi bawah |
+
+### `PlaceholderScreenSpec`
+
+| Field | Meaning |
+| --- | --- |
+| `screen_name` | Nama screen yang belum tersedia |
+| `status` | Saat ini `pending design` |
+| `dependency` | Feature atau flow yang memerlukan screen tersebut |
+| `notes` | Catatan singkat untuk desain berikutnya |
+
+## 15. Rancangan Slicing UI Mobile
+
+### `screen_home`
+
+Tujuan screen:
+Menjadi dashboard utama yang merangkum posisi uang user, pintu masuk aksi cepat, bantuan expert, dan recent activity.
+
+ASCII layout:
+
+```text
+.--------------------------------------------------.
+|  Welcome back, Alex Morgan        o      ( )     |
+|  January 2026                                     |
+|  .----------. .-------------------------------.  |
+|  |  pie     | |   TOTAL BALANCE               |  |
+|  | preview  | |   Rp 24.500.000        >      |  |
+|  | View     | |   [cash] [bank] [wallet]      |  |
+|  | Portfolio| '-------------------------------'  |
+|  '----------'                                    |
+|                                                  |
+|   (B)         (H)         (S)         (R)   (Bi) |
+|  Budget      History      Score      Report Bills|
+|                                                  |
+|  Expert Help                           View all  |
+|  .----------------.  .------------------------.  |
+|  | Sarah Jenkins  |  | Mike Thompson          |  |
+|  | Tax Consultant |  | Financial Planner      |  |
+|  | Rp 75k   Chat  |  | Rp 125k         Chat   |  |
+|  '----------------'  '------------------------'  |
+|                                                  |
+|  Keuangan Bulan Ini                              |
+|  .--------------------------------------------.  |
+|  | Budget                                75%  |  |
+|  | ======= lime progress ========             |  |
+|  | [target nabung] [cara naikkan tabung]      |  |
+|  '--------------------------------------------'  |
+|                                                  |
+|  Recent Activity                          o      |
+|  .--------------------------------------------.  |
+|  | Uber Trip                     -Rp 150.000  |  |
+|  | Starbucks                     -Rp 65.000   |  |
+|  | Netflix                       -Rp 186.000  |  |
+|  '--------------------------------------------'  |
+|                                                  |
+|   Home      Budget       (+)     Consult Wallet |
+'--------------------------------------------------'
+```
+
+Section breakdown:
+
+1. `section_header`
+2. `section_month_label`
+3. `section_total_balance_hero`
+4. `section_quick_actions`
+5. `section_expert_help`
+6. `section_monthly_finance`
+7. `section_recent_activity`
+8. `section_bottom_nav`
+
+Slice units:
+
+1. `header`
+2. `hero_card`
+3. `content_list`
+4. `cta`
+5. `bottom_nav`
+
+Reusable components:
+
+1. `component_user_header`
+2. `component_total_balance_card`
+3. `component_quick_action_item`
+4. `component_consultant_mini_card`
+5. `component_budget_summary_card`
+6. `component_recent_transaction_row`
+7. `component_bottom_nav`
+
+Mock data needs:
+
+1. User greeting and avatar
+2. Current month label
+3. Total balance summary
+4. Portfolio split preview
+5. Quick actions metadata
+6. Expert help list
+7. Monthly finance summary
+8. Recent transactions preview
+
+State penting:
+
+1. `state_loading_dashboard`
+2. `state_empty_expert_help`
+3. `state_empty_recent_activity`
+4. `state_error_dashboard`
+
+Catatan implementasi:
+
+1. Hero card adalah focal point utama screen.
+2. Quick actions lebih cocok di-slice sebagai grid horizontal icon label.
+3. Expert help dan recent activity harus dipisah menjadi section modular.
+4. Bottom nav active state ada pada `Home`.
+
+### `screen_consult_list`
+
+Tujuan screen:
+Membantu user mencari konsultan, memfilter kebutuhan, dan memilih konsultan untuk booking.
+
+ASCII layout:
+
+```text
+.--------------------------------------------------.
+|                 Consultation                o    |
+|  .--------------------------------------------.  |
+|  |  search consultant or location...         |  |
+|  '--------------------------------------------'  |
+|   [All] [Tax] [Investment] [Insurance] [Debt]   |
+|                                                  |
+|  .--------------------------------------------.  |
+|  | Bingung mencari konsultan yang cocok?      |  |
+|  | Coba Fitur Match Expert --------------->   |  |
+|  '--------------------------------------------'  |
+|                                                  |
+|  .--------------------------------------------.  |
+|  | Sarah Jenkins                4.9           |  |
+|  | Senior Tax Consultant                       |  |
+|  | [Corp.Tax] [Estate Planning]               |  |
+|  | Starting from Rp 250.000     [Schedule]    |  |
+|  '--------------------------------------------'  |
+|  .--------------------------------------------.  |
+|  | Mike Thompson                4.8           |  |
+|  | Financial Planner                          |  |
+|  | [Wealth Mgmt] [Retirement]                 |  |
+|  | Starting from Rp 185.000     [Schedule]    |  |
+|  '--------------------------------------------'  |
+|  .--------------------------------------------.  |
+|  | Emily Chen                   5.0           |  |
+|  | Crypto Analyst                              |  |
+|  | [Blockchain] [DeFi Strategy]               |  |
+|  | Starting from Rp 300.000     [Schedule]    |  |
+|  '--------------------------------------------'  |
+|                                                  |
+|   Home      Budget       (+)     Consult Wallet |
+'--------------------------------------------------'
+```
+
+Section breakdown:
+
+1. `section_header`
+2. `section_search`
+3. `section_category_chips`
+4. `section_match_cta_banner`
+5. `section_consultant_list`
+6. `section_bottom_nav`
+
+Slice units:
+
+1. `header`
+2. `tabs_or_chips`
+3. `content_list`
+4. `cta`
+5. `bottom_nav`
+
+Reusable components:
+
+1. `component_centered_title_header`
+2. `component_search_input`
+3. `component_filter_chip`
+4. `component_match_expert_banner`
+5. `component_consultant_card`
+6. `component_bottom_nav`
+
+Mock data needs:
+
+1. Filter category list
+2. CTA banner content
+3. Consultant listing
+4. Rating, experience, tags, location, and price
+5. Availability or booking button state
+
+State penting:
+
+1. `state_loading_consultants`
+2. `state_empty_consultants`
+3. `state_search_no_result`
+4. `state_error_consultants`
+5. `state_card_fully_booked`
+
+Catatan implementasi:
+
+1. Listing card perlu support variasi CTA aktif dan disabled.
+2. Chip filter sebaiknya reusable lintas screen lain.
+3. Bottom nav active state ada pada `Consult`.
+
+### `screen_consult_detail`
+
+Tujuan screen:
+Menjadi halaman detail konsultan untuk membantu user memvalidasi profil dan memutuskan booking.
+
+ASCII layout:
+
+```text
+.--------------------------------------------------.
+|  <        hero portrait area          o   o      |
+|                                                  |
+|                 Sarah Jenkins                    |
+|     Senior Tax Consultant   [Verified]           |
+|                                                  |
+|    450+ Clients    4.9 Rating    12 Yr Exp       |
+| ------------------------------------------------ |
+|  Tentang Konsultan                               |
+|  Profesional pajak berpengalaman ...             |
+| ------------------------------------------------ |
+|  .--------------------------------------------.  |
+|  | Keahlian                               v    | |
+|  | [Tax Planning] [Audit] [Corp Finance]      | |
+|  '--------------------------------------------'  |
+|  .--------------------------------------------.  |
+|  | Sertifikasi                            >    | |
+|  '--------------------------------------------'  |
+|  .--------------------------------------------.  |
+|  | Riwayat Pendidikan                     >    | |
+|  '--------------------------------------------'  |
+|  .--------------------------------------------.  |
+|  | Pengalaman Lapangan                    >    | |
+|  '--------------------------------------------'  |
+|  Ulasan Pengguna                       Lihat All |
+|  .----------------.  .------------------------.  |
+|  | "Sangat detail"|  | "Penjelasannya mudah" |  |
+|  '----------------'  '------------------------'  |
+|  Biaya Sesi Rp 250.000/jam    [Pesan Sekarang]  |
+'--------------------------------------------------'
+```
+
+Section breakdown:
+
+1. `section_hero_profile`
+2. `section_stat_row`
+3. `section_about`
+4. `section_accordion_blocks`
+5. `section_reviews`
+6. `section_sticky_booking_cta`
+
+Slice units:
+
+1. `header`
+2. `hero_card`
+3. `content_list`
+4. `cta`
+
+Reusable components:
+
+1. `component_profile_hero_header`
+2. `component_verified_badge`
+3. `component_stat_item`
+4. `component_accordion_card`
+5. `component_skill_chip`
+6. `component_review_card`
+7. `component_sticky_cta_bar`
+
+Mock data needs:
+
+1. Consultant identity and hero media
+2. Stats summary
+3. About content
+4. Skill tags
+5. Certification list
+6. Education and experience items
+7. User reviews
+8. Pricing and booking CTA text
+
+State penting:
+
+1. `state_loading_consultant_detail`
+2. `state_empty_reviews`
+3. `state_collapsed_accordion`
+4. `state_error_consultant_detail`
+
+Catatan implementasi:
+
+1. Hero section memakai visual treatment berbeda dari list screen, jadi jangan dipaksa reuse penuh.
+2. Sticky CTA harus tetap terbaca saat konten panjang.
+3. Accordion content cocok di-slice sebagai reusable expandable card.
+
+### `screen_transaction_entry`
+
+Tujuan screen:
+Memfasilitasi input transaksi cepat dengan fokus kuat ke nominal dan kategori utama.
+
+ASCII layout:
+
+```text
+.--------------------------------------------------.
+|  x              Catat Transaksi          Upload  |
+|                                                  |
+|  .---------------.  .-------------------------.  |
+|  | Pengeluaran v |  | Hari Ini v              |  |
+|  '---------------'  '-------------------------'  |
+|                                                  |
+|  .--------------------------------------------.  |
+|  | Coba catat pakai AI, lebih praktis!  [Coba]|  |
+|  '--------------------------------------------'  |
+|                                                  |
+|                    Rp                            |
+|                     0                            |
+|                                                  |
+|       .----------------------------------.       |
+|       | Duplikat data transaksi yang lalu >|     |
+|       '----------------------------------'       |
+|                                                  |
+|  .--------------------------------------------.  |
+|  | [BNI Mobile] [Cash] [Stockbit]            |  |
+|  |                                            |  |
+|  | Makanan & minuman                       v |  |
+|  | ---------------------------------------- |  |
+|  | Catatan                                  |  |
+|  | Tambahkan catatan di sini...             |  |
+|  |                                          |  |
+|  '--------------------------------------------'  |
+|                 SWIPE UP TO FINISH              |
+'--------------------------------------------------'
+```
+
+Section breakdown:
+
+1. `section_fullscreen_lime_header`
+2. `section_type_and_date_pills`
+3. `section_ai_prompt_banner`
+4. `section_nominal_entry`
+5. `section_duplicate_shortcut`
+6. `section_form_sheet`
+
+Slice units:
+
+1. `header`
+2. `tabs_or_chips`
+3. `cta`
+4. `content_list`
+
+Reusable components:
+
+1. `component_modal_header`
+2. `component_transaction_type_pill`
+3. `component_ai_assist_banner`
+4. `component_large_amount_display`
+5. `component_wallet_chip`
+6. `component_category_selector_row`
+7. `component_notes_textarea`
+8. `component_swipe_finish_hint`
+
+Mock data needs:
+
+1. Transaction type options
+2. Selected date label
+3. Suggested AI helper copy
+4. Wallet options
+5. Category selection summary
+6. Notes placeholder state
+
+State penting:
+
+1. `state_idle_amount_zero`
+2. `state_wallet_selected`
+3. `state_category_unselected`
+4. `state_notes_empty`
+5. `state_entry_validation_warning`
+
+Catatan implementasi:
+
+1. Screen ini bersifat form-driven, jadi slice container dan field harus jelas.
+2. Visual split antara lime header dan white form sheet harus dipertahankan.
+3. Input nominal wajib punya prioritas visual tertinggi.
+
+### `screen_wallet`
+
+Tujuan screen:
+Menampilkan distribusi aset user sekaligus daftar wallet atau aset yang bisa diinspeksi lebih lanjut.
+
+ASCII layout:
+
+```text
+.--------------------------------------------------.
+|  January 2026                        o      ( )  |
+|  .--------------------------------------------.  |
+|  |         asset distribution donut           |  |
+|  |    Cash 35%   Bank 30%   Crypto 20%        |  |
+|  |              TOTAL BALANCE                 |  |
+|  |             Rp 215.500.000                 |  |
+|  '--------------------------------------------'  |
+|                                                  |
+|  Your Wallets                         Sort by    |
+|   [Semua] [E-Wallet] [Bank] [Investasi] [...]    |
+|                                                  |
+|  .----------------.  .------------------------.  |
+|  |   (+) Add New  |  | Bank BCA               |  |
+|  | Wallet / Asset |  | Rp 85.450.000 ======   |  |
+|  '----------------'  '------------------------'  |
+|  .----------------.  .------------------------.  |
+|  | Bank BNI       |  | DANA                   |  |
+|  | Rp 2.500.000 = |  | Rp 850.000 =====       |  |
+|  '----------------'  '------------------------'  |
+|  .----------------.  .------------------------.  |
+|  | GoPay          |  | IndoPremier            |  |
+|  | Rp 35.800.000  |  | Rp 32.300.000 ===      |  |
+|  '----------------'  '------------------------'  |
+|                                                  |
+|   Home      Budget       (+)     Consult Wallet |
+'--------------------------------------------------'
+```
+
+Section breakdown:
+
+1. `section_header`
+2. `section_asset_distribution_card`
+3. `section_wallet_header`
+4. `section_wallet_filter_chips`
+5. `section_wallet_grid`
+6. `section_bottom_nav`
+
+Slice units:
+
+1. `header`
+2. `hero_card`
+3. `tabs_or_chips`
+4. `content_list`
+5. `bottom_nav`
+
+Reusable components:
+
+1. `component_month_header`
+2. `component_asset_distribution_card`
+3. `component_wallet_filter_chip`
+4. `component_add_wallet_tile`
+5. `component_wallet_card`
+6. `component_bottom_nav`
+
+Mock data needs:
+
+1. Period label
+2. Total balance
+3. Asset distribution percentages
+4. Wallet categories
+5. Wallet card list
+6. Sort state
+
+State penting:
+
+1. `state_loading_wallet_distribution`
+2. `state_empty_wallet_list`
+3. `state_filter_active`
+4. `state_error_wallet`
+
+Catatan implementasi:
+
+1. Distribution card adalah komponen khusus dan tidak perlu dipaksa reuse dengan summary card biasa.
+2. Grid wallet perlu support card dengan logo image maupun initials.
+3. Bottom nav active state ada pada `Wallet`.
+
+### `screen_budget`
+
+Tujuan screen:
+Menampilkan ringkasan budget aktif dan performa kategori budget.
+
+ASCII layout:
+
+```text
+.--------------------------------------------------.
+|                 January 2026                     |
+|      .----------. .----------. .----------.      |
+|      | Goals    | | Budget   | | Bills    |      |
+|      '----------' '----------' '----------'      |
+|                                                  |
+|  .--------------------------------------------.  |
+|  | Total Budget      Rp 10.000.000           o|  |
+|  | Remaining          Rp 2.500.000            |  |
+|  | ========= lime progress =========    75%   |  |
+|  '--------------------------------------------'  |
+|                                                  |
+|  Categories                              Tambah  |
+|  .--------------------------------------------.  |
+|  | Food & Drink                Rp 4.500.000   |  |
+|  | Left Rp 500.000     ======== progress ==== |  |
+|  '--------------------------------------------'  |
+|  .--------------------------------------------.  |
+|  | Transport                   Rp 1.200.000   |  |
+|  | Left Rp 800.000     ===== progress =====   |  |
+|  '--------------------------------------------'  |
+|  .--------------------------------------------.  |
+|  | Entertainment               Rp 800.000     |  |
+|  | Left Rp 700.000     ===== progress =====   |  |
+|  '--------------------------------------------'  |
+|                                                  |
+|   Home      Budget       (+)     Consult Wallet |
+'--------------------------------------------------'
+```
+
+Section breakdown:
+
+1. `section_month_header`
+2. `section_segmented_tabs`
+3. `section_budget_overview_card`
+4. `section_categories_header`
+5. `section_budget_category_list`
+6. `section_bottom_nav`
+
+Slice units:
+
+1. `header`
+2. `tabs_or_chips`
+3. `hero_card`
+4. `content_list`
+5. `bottom_nav`
+
+Reusable components:
+
+1. `component_month_header`
+2. `component_finance_tabs`
+3. `component_budget_overview_card`
+4. `component_budget_category_card`
+5. `component_progress_bar`
+6. `component_bottom_nav`
+
+Mock data needs:
+
+1. Period label
+2. Active tab state
+3. Total budget summary
+4. Remaining amount
+5. Category budgets and progress
+
+State penting:
+
+1. `state_loading_budget`
+2. `state_empty_budget_categories`
+3. `state_budget_over_limit`
+4. `state_error_budget`
+
+Catatan implementasi:
+
+1. Tab switcher `Goals/Budget/Bills` harus reusable lintas tiga screen planning.
+2. Budget category card perlu hierarchy jelas antara `spent`, `remaining`, dan `total`.
+3. Bottom nav active state ada pada `Budget`.
+
+### `screen_goals`
+
+Tujuan screen:
+Menampilkan daftar saving goals, progress tiap goal, dan CTA untuk membuat goal baru.
+
+ASCII layout:
+
+```text
+.--------------------------------------------------.
+|                 January 2026                     |
+|      .----------. .----------. .----------.      |
+|      | Goals    | | Budget   | | Bills    |      |
+|      '----------' '----------' '----------'      |
+|  Your Saving Goals                     + New Goal |
+|                                                  |
+|  .----------------.  .------------------------.  |
+|  | MacBook Pro    |  | Emergency Fund         |  |
+|  | 75%  14 mo left|  | 45%    Urgent          |  |
+|  | Saved 18 jt    |  | Saved 22.5 jt          |  |
+|  '----------------'  '------------------------'  |
+|  .----------------.  .------------------------.  |
+|  | Japan Trip     |  | Tesla Model 3          |  |
+|  | 20%   8 mo left|  | 10%    3 years         |  |
+|  | Saved 7 jt     |  | Saved 8 jt             |  |
+|  '----------------'  '------------------------'  |
+|  .----------------.                               |
+|  |  (+)           |                               |
+|  | Create New Goal|                               |
+|  '----------------'                               |
+|                                                  |
+|  .--------------------------------------------.  |
+|  | Smart Tip                                   |  |
+|  | Save extra Rp 500.000 bulan ini ...         |  |
+|  '--------------------------------------------'  |
+|                                                  |
+|   Home      Budget       (+)     Consult Wallet |
+'--------------------------------------------------'
+```
+
+Section breakdown:
+
+1. `section_month_header`
+2. `section_segmented_tabs`
+3. `section_goals_header`
+4. `section_goal_grid`
+5. `section_smart_tip`
+6. `section_bottom_nav`
+
+Slice units:
+
+1. `header`
+2. `tabs_or_chips`
+3. `content_list`
+4. `cta`
+5. `bottom_nav`
+
+Reusable components:
+
+1. `component_month_header`
+2. `component_finance_tabs`
+3. `component_goal_card`
+4. `component_create_goal_tile`
+5. `component_smart_tip_card`
+6. `component_bottom_nav`
+
+Mock data needs:
+
+1. Period label
+2. Goals list
+3. Goal progress values
+4. Goal urgency badges
+5. Smart tip content
+
+State penting:
+
+1. `state_loading_goals`
+2. `state_empty_goals`
+3. `state_goal_urgent`
+4. `state_error_goals`
+
+Catatan implementasi:
+
+1. Goal grid harus responsif terhadap jumlah item ganjil.
+2. Create-goal tile diperlakukan sebagai item grid khusus, bukan FAB.
+3. Smart tip adalah secondary insight card yang cocok reuse di planning feature lain.
+
+### `screen_bills`
+
+Tujuan screen:
+Membantu user melihat total tagihan bulan berjalan, upcoming payments, dan histori tagihan yang sudah dibayar.
+
+ASCII layout:
+
+```text
+.--------------------------------------------------.
+|                 January 2026                     |
+|      .----------. .----------. .----------.      |
+|      | Goals    | | Budget   | | Bills    |      |
+|      '----------' '----------' '----------'      |
+|                                                  |
+|  .--------------------------------------------.  |
+|  | TOTAL BILLS FOR JAN      Rp 1.286.000      |  |
+|  | ======== lime progress ========       65%  |  |
+|  | Paid Rp 835.900      Remaining Rp 450.100  |  |
+|  '--------------------------------------------'  |
+|                                                  |
+|  Upcoming Payments                               |
+|  .--------------------------------------------.  |
+|  | Netflix Premium        Rp 186.000  Pay Now |  |
+|  | Due in 2 days                            |  |  |
+|  '--------------------------------------------'  |
+|  .--------------------------------------------.  |
+|  | Spotify Family        Rp 86.000   Pay Now |  |
+|  '--------------------------------------------'  |
+|  .--------------------------------------------.  |
+|  | IndiHome Fiber        Rp 350.000  Auto-pay |  |
+|  '--------------------------------------------'  |
+|  Paid this month                                |
+|  [Water Bill]   [Electricity]                   |
+|                                                  |
+|   Home      Budget       (+)     Consult Wallet |
+'--------------------------------------------------'
+```
+
+Section breakdown:
+
+1. `section_month_header`
+2. `section_segmented_tabs`
+3. `section_total_bills_overview`
+4. `section_upcoming_payments`
+5. `section_paid_this_month`
+6. `section_bottom_nav`
+
+Slice units:
+
+1. `header`
+2. `tabs_or_chips`
+3. `hero_card`
+4. `content_list`
+5. `bottom_nav`
+
+Reusable components:
+
+1. `component_month_header`
+2. `component_finance_tabs`
+3. `component_bills_summary_card`
+4. `component_upcoming_bill_row`
+5. `component_paid_bill_row`
+6. `component_bottom_nav`
+
+Mock data needs:
+
+1. Total bills summary
+2. Paid and remaining values
+3. Upcoming bills list
+4. Paid bills list
+5. Due date and payment state
+
+State penting:
+
+1. `state_loading_bills`
+2. `state_empty_upcoming_bills`
+3. `state_autopay_enabled`
+4. `state_pay_now_available`
+5. `state_error_bills`
+
+Catatan implementasi:
+
+1. Upcoming dan paid list perlu dua jenis row berbeda.
+2. Tab switcher harus identical secara visual dengan Goals dan Budget.
+3. Bottom nav active state tetap `Budget` karena screen ini masih satu cluster planning.
+
+### `screen_transaction_history`
+
+Tujuan screen:
+Memberi akses ke pencarian, filter, dan inspeksi riwayat transaksi berdasarkan tanggal dan kategori.
+
+ASCII layout:
+
+```text
+.--------------------------------------------------.
+|  <            Transaction History          o     |
+|  .--------------------------------------------.  |
+|  |  Search transactions...                   |  |
+|  '--------------------------------------------'  |
+|   [All] [Category v] [Wallet v] [Amount v]      |
+|                                                  |
+|   TOTAL IN +Rp 25.500.000   |  -Rp 8.240.000    |
+| ------------------------------------------------ |
+|  TODAY, JAN 24                                   |
+|  .--------------------------------------------.  |
+|  | McDonald's                  -Rp 85.000     |  |
+|  | 12:30 PM   Food & Bev                       |  |
+|  '--------------------------------------------'  |
+|  .--------------------------------------------.  |
+|  | Gojek Ride                  -Rp 24.000     |  |
+|  | 08:15 AM   Transport                        |  |
+|  '--------------------------------------------'  |
+|  .--------------------------------------------.  |
+|  | Top Up E-Wallet             -Rp 500.000    |  |
+|  | 07:45 AM   Transfer                         |  |
+|  '--------------------------------------------'  |
+|  YESTERDAY, JAN 23                              |
+|  [Freelance Project A] [Supermarket Weekly]     |
+|  [Netflix Premium]                              |
+'--------------------------------------------------'
+```
+
+Section breakdown:
+
+1. `section_top_app_bar`
+2. `section_search`
+3. `section_filter_chips`
+4. `section_total_in_out_summary`
+5. `section_grouped_transaction_list`
+
+Slice units:
+
+1. `header`
+2. `tabs_or_chips`
+3. `content_list`
+
+Reusable components:
+
+1. `component_back_header`
+2. `component_search_input`
+3. `component_filter_chip`
+4. `component_in_out_summary`
+5. `component_transaction_group_header`
+6. `component_transaction_history_row`
+
+Mock data needs:
+
+1. Search query state
+2. Active filter state
+3. Summary totals
+4. Grouped transaction sections
+5. Transaction rows with icon, merchant, time, category, and amount
+
+State penting:
+
+1. `state_loading_history`
+2. `state_empty_history`
+3. `state_search_no_result`
+4. `state_filter_applied`
+5. `state_error_history`
+
+Catatan implementasi:
+
+1. Filter chip style sebaiknya reuse dari consult list bila masih sejalan.
+2. Group header berdasarkan tanggal perlu dipisah dari card item.
+3. Screen ini kemungkinan diakses dari quick action `History` dan recent activity di home.
+
+## 16. Future Mobile Screens Placeholder
+
+Screen di bawah belum memiliki aset final pada folder `ui_halofin`, tetapi kemungkinan masih dibutuhkan untuk melengkapi flow mobile.
+
+| screen_name | status | dependency | notes |
+| --- | --- | --- | --- |
+| `screen_auth_login` | `pending design` | Authentication mock flow | Dibutuhkan bila mobile onboarding memakai auth screen khusus |
+| `screen_auth_register` | `pending design` | Authentication mock flow | Menunggu arah final onboarding |
+| `screen_ai_draft_review` | `pending design` | AI quick actions | Belum ada visual review draft yang eksplisit |
+| `screen_sync_connection_flow` | `pending design` | Automated account sync | Belum ada desain koneksi provider |
+| `screen_wallet_detail` | `pending design` | Wallet and recommendation | Dibutuhkan jika wallet card membuka detail wallet |
+| `screen_recommendation_detail` | `pending design` | Smart recommendation | Belum ada desain explainable recommendation |
+| `screen_booking_checkout` | `pending design` | Consultant marketplace | Detail checkout pembayaran belum ada |
+| `screen_booking_confirmation` | `pending design` | Consultant marketplace | Perlu setelah flow booking berhasil |
+| `screen_notifications` | `pending design` | Home and operational alerts | Ikon notifikasi sudah ada, screen detail belum ada |
+
+## 17. Implementation Notes For Slicing
+
+1. Mulai slicing dari reusable primitives dulu, lalu rakit per screen.
+2. Prioritas implementasi yang paling aman adalah `screen_home`, `screen_transaction_history`, `screen_wallet`, `screen_budget`, `screen_goals`, `screen_bills`, `screen_consult_list`, `screen_consult_detail`, lalu `screen_transaction_entry`.
+3. `Goals`, `Budget`, dan `Bills` sebaiknya berbagi shell layout dan segmented tab yang sama.
+4. `Consult list` dan `Transaction history` sama-sama memakai pola search plus chips, jadi komponen filter perlu dirancang reusable sejak awal.
+5. `component_bottom_nav` dikunci ke label final `Home`, `Budget`, `Add`, `Consult`, `Wallet`.
+6. Semua screen di atas tetap harus punya minimal `state_loading`, `state_empty`, dan `state_error` walau desain final untuk state itu belum digambar.

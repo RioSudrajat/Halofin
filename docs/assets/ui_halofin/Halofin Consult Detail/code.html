@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Refined Consultant Profile V1</title>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#ccff00",
+                        "primary-dark": "#b3e600",
+                        "accent-blue": "#b2f5ea",
+                        "background-light": "#ffffff",
+                        "background-off": "#f8f9fa",
+                        "text-main": "#1a1a1a",
+                        "text-muted": "#6b7280",
+                    },
+                    fontFamily: {
+                        "display": ["Manrope", "sans-serif"]
+                    },
+                    borderRadius: { "DEFAULT": "1rem", "lg": "1.5rem", "xl": "2rem", "2xl": "2.5rem", "full": "9999px" },
+                    boxShadow: {
+                        'soft': '0 4px 20px -2px rgba(0, 0, 0, 0.05)',
+                        'card': '0 2px 10px rgba(0, 0, 0, 0.03)',
+                        'float': '0 10px 40px -10px rgba(0,0,0,0.15)',
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        body {
+            min-height: max(884px, 100dvh);
+        }
+        details > summary {
+            list-style: none;
+        }
+        details > summary::-webkit-details-marker {
+            display: none;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-off font-display antialiased text-text-main transition-colors duration-300">
+<div class="relative flex min-h-screen w-full flex-col max-w-md mx-auto overflow-hidden bg-white shadow-2xl">
+<div class="relative h-[320px] w-full">
+<div class="absolute inset-0 bg-cover bg-center" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBjtx7h7FjDd3wyfWqRg4PDPSXr4X6ALJw0d8Tr6LDDMwno2KLfdLKfww7Xb_x15wvkXDXUVkXCmS4v-ZpEcM6wFJEFv0qanyMGTPSpMgTonlCwZFeFKQ_17dM5LYGc-AwdSGrLe7l7bQY0LSUvUnrNMPpqssuy7RF3G8Dq65eDnT2TfcOJyKbDXQSDpNlmwA1T6SnyRAKkKxAqa5jyuibGs8cMjvUaZqN4_1NtcPUFDkCZaPe57smpr4dkzg_86MvK0t0T9oLEN_ny');"></div>
+<div class="absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-black/80"></div>
+<header class="absolute top-0 left-0 w-full flex items-center justify-between px-5 pt-12 pb-4 z-20 text-white">
+<button class="w-10 h-10 rounded-full bg-white/20 backdrop-blur-md flex items-center justify-center hover:bg-white/30 transition-all">
+<span class="material-symbols-outlined text-white">arrow_back</span>
+</button>
+<div class="flex gap-3">
+<button class="w-10 h-10 rounded-full bg-white/20 backdrop-blur-md flex items-center justify-center hover:bg-white/30 transition-all">
+<span class="material-symbols-outlined text-white">share</span>
+</button>
+<button class="w-10 h-10 rounded-full bg-white/20 backdrop-blur-md flex items-center justify-center hover:bg-white/30 transition-all">
+<span class="material-symbols-outlined text-white">favorite_border</span>
+</button>
+</div>
+</header>
+<div class="absolute bottom-6 left-5 right-5 z-20 text-white">
+<div class="flex items-end justify-between">
+<div>
+<h1 class="text-3xl font-bold leading-tight">Sarah Jenkins</h1>
+<p class="text-white/90 font-medium text-sm mt-1">Senior Tax Consultant • BudgetIn Certified</p>
+</div>
+<div class="bg-primary text-black px-3 py-1 rounded-full text-xs font-bold flex items-center gap-1 shadow-lg">
+<span class="material-symbols-outlined text-[14px]">verified</span>
+                        Verified
+                    </div>
+</div>
+</div>
+</div>
+<main class="flex-1 overflow-y-auto hide-scrollbar -mt-4 bg-white rounded-t-3xl relative z-10 pb-28">
+<section class="grid grid-cols-3 gap-4 px-6 py-6 border-b border-gray-100">
+<div class="flex flex-col items-center text-center">
+<span class="text-xl font-bold text-gray-900">450+</span>
+<span class="text-[10px] text-gray-500 font-medium uppercase tracking-wide mt-1">Clients</span>
+</div>
+<div class="flex flex-col items-center text-center border-x border-gray-100 px-4">
+<div class="flex items-center gap-1">
+<span class="text-xl font-bold text-gray-900">4.9</span>
+<span class="material-symbols-outlined text-yellow-500 text-[18px] fill-1">star</span>
+</div>
+<span class="text-[10px] text-gray-500 font-medium uppercase tracking-wide mt-1">Rating</span>
+</div>
+<div class="flex flex-col items-center text-center">
+<span class="text-xl font-bold text-gray-900">12 Yr</span>
+<span class="text-[10px] text-gray-500 font-medium uppercase tracking-wide mt-1">Experience</span>
+</div>
+</section>
+<section class="px-6 py-6 border-b border-gray-100">
+<h3 class="text-sm font-bold text-gray-900 mb-2">Tentang Konsultan</h3>
+<p class="text-sm text-gray-600 leading-relaxed">
+                    Profesional pajak berpengalaman dengan spesialisasi dalam restrukturisasi pajak perusahaan dan perencanaan keuangan strategis. Berdedikasi untuk membantu klien mencapai efisiensi fiskal yang optimal melalui pendekatan yang terstruktur dan patuh hukum.
+                </p>
+</section>
+<section class="px-5 py-6 space-y-3">
+<details class="group bg-white border border-gray-100 rounded-2xl shadow-sm open:ring-1 open:ring-primary/30 open:bg-background-off/50 transition-all duration-300" open="">
+<summary class="flex items-center justify-between p-4 cursor-pointer">
+<div class="flex items-center gap-3">
+<div class="bg-gray-100 p-1.5 rounded-lg text-gray-600">
+<span class="material-symbols-outlined text-xl">psychology</span>
+</div>
+<span class="text-sm font-bold text-gray-900">Keahlian</span>
+</div>
+<span class="material-symbols-outlined text-gray-400 group-open:rotate-180 transition-transform">expand_more</span>
+</summary>
+<div class="px-4 pb-4 pt-0 pl-[3.25rem]">
+<div class="flex flex-wrap gap-2">
+<span class="px-3 py-1.5 rounded-xl bg-white text-xs font-semibold text-gray-700 border border-gray-100 shadow-sm">Tax Planning</span>
+<span class="px-3 py-1.5 rounded-xl bg-white text-xs font-semibold text-gray-700 border border-gray-100 shadow-sm">Audit</span>
+<span class="px-3 py-1.5 rounded-xl bg-white text-xs font-semibold text-gray-700 border border-gray-100 shadow-sm">Corporate Finance</span>
+<span class="px-3 py-1.5 rounded-xl bg-white text-xs font-semibold text-gray-700 border border-gray-100 shadow-sm">Investment</span>
+<span class="px-3 py-1.5 rounded-xl bg-white text-xs font-semibold text-gray-700 border border-gray-100 shadow-sm">+3 More</span>
+</div>
+</div>
+</details>
+<details class="group bg-white border border-gray-100 rounded-2xl shadow-sm open:ring-1 open:ring-primary/30 open:bg-background-off/50 transition-all duration-300">
+<summary class="flex items-center justify-between p-4 cursor-pointer">
+<div class="flex items-center gap-3">
+<div class="bg-gray-100 p-1.5 rounded-lg text-gray-600">
+<span class="material-symbols-outlined text-xl">verified_user</span>
+</div>
+<span class="text-sm font-bold text-gray-900">Sertifikasi</span>
+</div>
+<span class="material-symbols-outlined text-gray-400 group-open:rotate-180 transition-transform">expand_more</span>
+</summary>
+<div class="px-4 pb-4 pt-0 pl-[3.25rem] space-y-3">
+<div class="flex items-center gap-3 bg-white p-3 rounded-xl border border-gray-50">
+<div class="w-8 h-8 rounded-full bg-blue-50 flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-blue-600 text-sm">workspace_premium</span>
+</div>
+<div class="flex-1">
+<p class="text-xs font-bold text-gray-900">Certified Public Accountant (CPA)</p>
+<p class="text-[10px] text-gray-500">Issued 2015 • Valid until 2025</p>
+</div>
+</div>
+<div class="flex items-center gap-3 bg-white p-3 rounded-xl border border-gray-50">
+<div class="w-8 h-8 rounded-full bg-purple-50 flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-purple-600 text-sm">card_membership</span>
+</div>
+<div class="flex-1">
+<p class="text-xs font-bold text-gray-900">Chartered Financial Analyst (CFA)</p>
+<p class="text-[10px] text-gray-500">Issued 2018</p>
+</div>
+</div>
+</div>
+</details>
+<details class="group bg-white border border-gray-100 rounded-2xl shadow-sm open:ring-1 open:ring-primary/30 open:bg-background-off/50 transition-all duration-300">
+<summary class="flex items-center justify-between p-4 cursor-pointer">
+<div class="flex items-center gap-3">
+<div class="bg-gray-100 p-1.5 rounded-lg text-gray-600">
+<span class="material-symbols-outlined text-xl">school</span>
+</div>
+<span class="text-sm font-bold text-gray-900">Riwayat Pendidikan</span>
+</div>
+<span class="material-symbols-outlined text-gray-400 group-open:rotate-180 transition-transform">expand_more</span>
+</summary>
+<div class="px-4 pb-4 pt-0 text-xs text-gray-600 space-y-3 pl-[3.25rem]">
+<div class="relative pl-4 border-l-2 border-gray-200">
+<div class="absolute -left-[5px] top-1.5 w-2 h-2 rounded-full bg-primary border border-white"></div>
+<p class="font-bold text-gray-900">Master of Finance</p>
+<p class="text-gray-500">University of Melbourne, 2012</p>
+</div>
+<div class="relative pl-4 border-l-2 border-gray-200">
+<div class="absolute -left-[5px] top-1.5 w-2 h-2 rounded-full bg-gray-300 border border-white"></div>
+<p class="font-bold text-gray-900">Bachelor of Economics</p>
+<p class="text-gray-500">Universitas Indonesia, 2010</p>
+</div>
+</div>
+</details>
+<details class="group bg-white border border-gray-100 rounded-2xl shadow-sm open:ring-1 open:ring-primary/30 open:bg-background-off/50 transition-all duration-300">
+<summary class="flex items-center justify-between p-4 cursor-pointer">
+<div class="flex items-center gap-3">
+<div class="bg-gray-100 p-1.5 rounded-lg text-gray-600">
+<span class="material-symbols-outlined text-xl">work_history</span>
+</div>
+<span class="text-sm font-bold text-gray-900">Pengalaman Lapangan</span>
+</div>
+<span class="material-symbols-outlined text-gray-400 group-open:rotate-180 transition-transform">expand_more</span>
+</summary>
+<div class="px-4 pb-4 pt-0 text-xs text-gray-600 pl-[3.25rem]">
+<p class="leading-relaxed">Over 10 years working with top 4 accounting firms in Jakarta and Singapore, specializing in corporate tax restructuring. Handled over 500+ successful audit defenses.</p>
+</div>
+</details>
+</section>
+<section class="pl-6 pb-8">
+<div class="flex items-center justify-between pr-6 mb-4">
+<h3 class="text-sm font-bold text-gray-900">Ulasan Pengguna</h3>
+<a class="text-xs font-bold text-primary-dark hover:underline" href="#">Lihat Semua</a>
+</div>
+<div class="flex gap-4 overflow-x-auto hide-scrollbar pb-4 pr-6">
+<div class="min-w-[280px] bg-white border border-gray-100 p-4 rounded-2xl shadow-card flex flex-col gap-3 relative overflow-hidden">
+<div class="absolute top-2 right-2 opacity-5">
+<span class="material-symbols-outlined text-gray-900 text-6xl">format_quote</span>
+</div>
+<div class="flex items-center justify-between mb-1">
+<div class="flex items-center gap-2">
+<div class="w-6 h-6 rounded-full bg-gray-800 flex items-center justify-center text-[10px] font-bold text-white">AD</div>
+<span class="text-xs font-bold text-gray-900">Andi Darmawan</span>
+</div>
+<div class="flex items-center gap-1 bg-background-off px-2 py-0.5 rounded-full border border-gray-100">
+<span class="material-symbols-outlined text-[14px] text-yellow-500 fill-1">star</span>
+<span class="text-xs font-bold text-gray-800">5.0</span>
+</div>
+</div>
+<p class="text-sm text-gray-700 leading-relaxed z-10">"Sarah sangat membantu saya dalam merapikan laporan pajak tahunan. Sangat detail dan profesional!"</p>
+</div>
+<div class="min-w-[280px] bg-white border border-gray-100 p-4 rounded-2xl shadow-card flex flex-col gap-3 relative overflow-hidden">
+<div class="absolute top-2 right-2 opacity-5">
+<span class="material-symbols-outlined text-gray-900 text-6xl">format_quote</span>
+</div>
+<div class="flex items-center justify-between mb-1">
+<div class="flex items-center gap-2">
+<div class="w-6 h-6 rounded-full bg-indigo-100 flex items-center justify-center text-[10px] font-bold text-indigo-700">JL</div>
+<span class="text-xs font-bold text-gray-900">Jessica Lim</span>
+</div>
+<div class="flex items-center gap-1 bg-background-off px-2 py-0.5 rounded-full border border-gray-100">
+<span class="material-symbols-outlined text-[14px] text-yellow-500 fill-1">star</span>
+<span class="text-xs font-bold text-gray-800">4.8</span>
+</div>
+</div>
+<p class="text-sm text-gray-700 leading-relaxed z-10">"Penjelasan yang diberikan sangat mudah dimengerti untuk orang awam seperti saya. Recommended!"</p>
+</div>
+<div class="min-w-[280px] bg-white border border-gray-100 p-4 rounded-2xl shadow-card flex flex-col gap-3 relative overflow-hidden">
+<div class="absolute top-2 right-2 opacity-5">
+<span class="material-symbols-outlined text-gray-900 text-6xl">format_quote</span>
+</div>
+<div class="flex items-center justify-between mb-1">
+<div class="flex items-center gap-2">
+<div class="w-6 h-6 rounded-full bg-green-100 flex items-center justify-center text-[10px] font-bold text-green-700">BK</div>
+<span class="text-xs font-bold text-gray-900">Budi Kurniawan</span>
+</div>
+<div class="flex items-center gap-1 bg-background-off px-2 py-0.5 rounded-full border border-gray-100">
+<span class="material-symbols-outlined text-[14px] text-yellow-500 fill-1">star</span>
+<span class="text-xs font-bold text-gray-800">4.9</span>
+</div>
+</div>
+<p class="text-sm text-gray-700 leading-relaxed z-10">"Sangat puas dengan konsultasi hari ini. Solusi yang ditawarkan sangat taktis dan efisien."</p>
+</div>
+</div>
+</section>
+</main>
+<footer class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-100 p-5 pb-8 shadow-[0_-4px_20px_rgba(0,0,0,0.05)] z-30 max-w-md mx-auto">
+<div class="flex items-center justify-between gap-4">
+<div class="flex flex-col">
+<span class="text-xs text-gray-500 font-medium">Biaya Sesi</span>
+<div class="flex items-baseline gap-1">
+<span class="text-lg font-bold text-gray-900">Rp 250.000</span>
+<span class="text-xs font-medium text-gray-400">/jam</span>
+</div>
+</div>
+<button class="flex-1 bg-primary hover:bg-primary-dark text-black font-bold py-3.5 px-6 rounded-xl transition-all shadow-lg shadow-primary/20 flex items-center justify-center gap-2 active:scale-95">
+<span>Pesan Sekarang</span>
+<span class="material-symbols-outlined text-[18px]">arrow_forward</span>
+</button>
+</div>
+</footer>
+</div>
+
+</body></html>

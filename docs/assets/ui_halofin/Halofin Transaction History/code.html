@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+
+<html class="" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>BudgetIn Transaction History</title>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#ccff00",
+                        "primary-dark": "#b3e600",
+                        "accent-blue": "#b2f5ea",
+                        "background-light": "#ffffff",
+                        "background-off": "#f8f9fa",
+                        "text-main": "#1a1a1a",
+                        "text-muted": "#6b7280",
+                        "nav-bg": "#fcfef0",
+                    },
+                    fontFamily: {
+                        "display": ["Manrope", "sans-serif"]
+                    },
+                    borderRadius: { "DEFAULT": "1rem", "lg": "1.5rem", "xl": "2rem", "2xl": "2.5rem", "full": "9999px" },
+                    boxShadow: {
+                        'soft': '0 4px 20px -2px rgba(0, 0, 0, 0.05)',
+                        'card': '0 2px 10px rgba(0, 0, 0, 0.03)',
+                        'nav-glow': '0 10px 30px -5px rgba(0, 0, 0, 0.08)',
+                        'fab-shadow': '0 8px 16px -4px rgba(204, 255, 0, 0.4)',
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        body {
+            min-height: max(884px, 100dvh);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+</head>
+<body class="bg-background-light font-display antialiased text-text-main transition-colors duration-300">
+<div class="relative flex min-h-screen w-full flex-col max-w-md mx-auto overflow-hidden shadow-2xl bg-background-off">
+<header class="relative flex items-center justify-between px-5 pt-6 pb-4 bg-white sticky top-0 z-20 shadow-sm">
+<div class="flex items-center gap-3">
+<button class="h-10 w-10 rounded-full bg-gray-50 flex items-center justify-center hover:bg-gray-100 transition-colors">
+<span class="material-symbols-outlined text-gray-900">arrow_back</span>
+</button>
+<h2 class="absolute left-1/2 -translate-x-1/2 text-xl font-bold text-text-main whitespace-nowrap">Transaction History</h2>
+</div>
+<div class="flex items-center gap-2">
+<button class="h-10 w-10 rounded-full bg-gray-50 flex items-center justify-center hover:bg-gray-100 transition-colors">
+<span class="material-symbols-outlined text-gray-900">tune</span>
+</button>
+</div>
+</header>
+<main class="flex-1 overflow-y-auto hide-scrollbar pb-6">
+<section class="px-5 pt-4 pb-2 bg-white rounded-b-3xl shadow-card mb-4">
+<div class="relative mb-4">
+<span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 material-symbols-outlined">search</span>
+<input class="w-full bg-gray-50 border-none rounded-xl py-3 pl-10 pr-4 text-sm font-medium text-gray-900 focus:ring-2 focus:ring-primary placeholder-gray-400" placeholder="Search transactions..." type="text"/>
+</div>
+<div class="flex gap-2 overflow-x-auto hide-scrollbar pb-2">
+<button class="shrink-0 px-4 py-1.5 rounded-full bg-gray-900 text-white text-xs font-semibold flex items-center gap-1.5">
+                    All
+                </button>
+<button class="shrink-0 px-4 py-1.5 rounded-full bg-gray-100 text-gray-600 border border-gray-200 text-xs font-semibold flex items-center gap-1.5 hover:bg-gray-200 transition-colors">
+                    Category
+                    <span class="material-symbols-outlined text-[14px]">expand_more</span>
+</button>
+<button class="shrink-0 px-4 py-1.5 rounded-full bg-gray-100 text-gray-600 border border-gray-200 text-xs font-semibold flex items-center gap-1.5 hover:bg-gray-200 transition-colors">
+                    Wallet
+                    <span class="material-symbols-outlined text-[14px]">expand_more</span>
+</button>
+<button class="shrink-0 px-4 py-1.5 rounded-full bg-gray-100 text-gray-600 border border-gray-200 text-xs font-semibold flex items-center gap-1.5 hover:bg-gray-200 transition-colors">
+                    Amount
+                    <span class="material-symbols-outlined text-[14px]">expand_more</span>
+</button>
+<button class="shrink-0 px-4 py-1.5 rounded-full bg-gray-100 text-gray-600 border border-gray-200 text-xs font-semibold flex items-center gap-1.5 hover:bg-gray-200 transition-colors">
+                    Date
+                    <span class="material-symbols-outlined text-[14px]">expand_more</span>
+</button>
+</div>
+<div class="mt-4 pt-4 border-t border-gray-100 flex justify-between items-center">
+<div class="flex flex-col">
+<span class="text-[10px] uppercase font-bold text-gray-400 tracking-wider">Total In</span>
+<span class="text-sm font-bold text-green-600">+Rp 25.500.000</span>
+</div>
+<div class="h-8 w-px bg-gray-200"></div>
+<div class="flex flex-col items-end">
+<span class="text-[10px] uppercase font-bold text-gray-400 tracking-wider">Total Out</span>
+<span class="text-sm font-bold text-red-500">-Rp 8.240.000</span>
+</div>
+</div>
+</section>
+<div class="px-5 space-y-6">
+<section>
+<h3 class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-3 pl-1">Today, Jan 24</h3>
+<div class="space-y-3">
+<div class="flex items-center justify-between p-4 rounded-2xl bg-white shadow-sm border border-gray-100 hover:shadow-md transition-all cursor-pointer group">
+<div class="flex items-center gap-3.5">
+<div class="h-12 w-12 rounded-full bg-yellow-50 flex items-center justify-center text-yellow-600 shadow-sm border border-yellow-100 group-hover:bg-primary group-hover:text-black group-hover:border-primary transition-colors">
+<span class="material-symbols-outlined">lunch_dining</span>
+</div>
+<div class="flex flex-col gap-0.5">
+<p class="text-sm font-bold text-gray-900">McDonald's</p>
+<div class="flex items-center gap-1.5">
+<span class="text-[10px] font-medium text-gray-400">12:30 PM</span>
+<span class="h-1 w-1 rounded-full bg-gray-300"></span>
+<span class="text-[10px] font-medium text-gray-400">Food &amp; Bev</span>
+</div>
+</div>
+</div>
+<p class="font-bold text-red-500 text-sm">-Rp 85.000</p>
+</div>
+<div class="flex items-center justify-between p-4 rounded-2xl bg-white shadow-sm border border-gray-100 hover:shadow-md transition-all cursor-pointer group">
+<div class="flex items-center gap-3.5">
+<div class="h-12 w-12 rounded-full bg-teal-50 flex items-center justify-center text-teal-600 shadow-sm border border-teal-100 group-hover:bg-primary group-hover:text-black group-hover:border-primary transition-colors">
+<span class="material-symbols-outlined">local_taxi</span>
+</div>
+<div class="flex flex-col gap-0.5">
+<p class="text-sm font-bold text-gray-900">Gojek Ride</p>
+<div class="flex items-center gap-1.5">
+<span class="text-[10px] font-medium text-gray-400">08:15 AM</span>
+<span class="h-1 w-1 rounded-full bg-gray-300"></span>
+<span class="text-[10px] font-medium text-gray-400">Transport</span>
+</div>
+</div>
+</div>
+<p class="font-bold text-red-500 text-sm">-Rp 24.000</p>
+</div>
+<div class="flex items-center justify-between p-4 rounded-2xl bg-white shadow-sm border border-gray-100 hover:shadow-md transition-all cursor-pointer group">
+<div class="flex items-center gap-3.5">
+<div class="h-12 w-12 rounded-full bg-green-50 flex items-center justify-center text-green-600 shadow-sm border border-green-100 group-hover:bg-primary group-hover:text-black group-hover:border-primary transition-colors">
+<span class="material-symbols-outlined">account_balance_wallet</span>
+</div>
+<div class="flex flex-col gap-0.5">
+<p class="text-sm font-bold text-gray-900">Top Up E-Wallet</p>
+<div class="flex items-center gap-1.5">
+<span class="text-[10px] font-medium text-gray-400">07:45 AM</span>
+<span class="h-1 w-1 rounded-full bg-gray-300"></span>
+<span class="text-[10px] font-medium text-gray-400">Transfer</span>
+</div>
+</div>
+</div>
+<p class="font-bold text-red-500 text-sm">-Rp 500.000</p>
+</div>
+</div>
+</section>
+<section>
+<h3 class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-3 pl-1">Yesterday, Jan 23</h3>
+<div class="space-y-3">
+<div class="flex items-center justify-between p-4 rounded-2xl bg-white shadow-sm border border-gray-100 hover:shadow-md transition-all cursor-pointer group">
+<div class="flex items-center gap-3.5">
+<div class="h-12 w-12 rounded-full bg-indigo-50 flex items-center justify-center text-indigo-600 shadow-sm border border-indigo-100 group-hover:bg-primary group-hover:text-black group-hover:border-primary transition-colors">
+<span class="material-symbols-outlined">work</span>
+</div>
+<div class="flex flex-col gap-0.5">
+<p class="text-sm font-bold text-gray-900">Freelance Project A</p>
+<div class="flex items-center gap-1.5">
+<span class="text-[10px] font-medium text-gray-400">04:20 PM</span>
+<span class="h-1 w-1 rounded-full bg-gray-300"></span>
+<span class="text-[10px] font-medium text-gray-400">Income</span>
+</div>
+</div>
+</div>
+<p class="font-bold text-green-600 text-sm">+Rp 2.500.000</p>
+</div>
+<div class="flex items-center justify-between p-4 rounded-2xl bg-white shadow-sm border border-gray-100 hover:shadow-md transition-all cursor-pointer group">
+<div class="flex items-center gap-3.5">
+<div class="h-12 w-12 rounded-full bg-red-50 flex items-center justify-center text-red-600 shadow-sm border border-red-100 group-hover:bg-primary group-hover:text-black group-hover:border-primary transition-colors">
+<span class="material-symbols-outlined">shopping_cart</span>
+</div>
+<div class="flex flex-col gap-0.5">
+<p class="text-sm font-bold text-gray-900">Supermarket Weekly</p>
+<div class="flex items-center gap-1.5">
+<span class="text-[10px] font-medium text-gray-400">02:10 PM</span>
+<span class="h-1 w-1 rounded-full bg-gray-300"></span>
+<span class="text-[10px] font-medium text-gray-400">Groceries</span>
+</div>
+</div>
+</div>
+<p class="font-bold text-red-500 text-sm">-Rp 845.000</p>
+</div>
+<div class="flex items-center justify-between p-4 rounded-2xl bg-white shadow-sm border border-gray-100 hover:shadow-md transition-all cursor-pointer group">
+<div class="flex items-center gap-3.5">
+<div class="h-12 w-12 rounded-full bg-purple-50 flex items-center justify-center text-purple-600 shadow-sm border border-purple-100 group-hover:bg-primary group-hover:text-black group-hover:border-primary transition-colors">
+<span class="material-symbols-outlined">subscriptions</span>
+</div>
+<div class="flex flex-col gap-0.5">
+<p class="text-sm font-bold text-gray-900">Netflix Premium</p>
+<div class="flex items-center gap-1.5">
+<span class="text-[10px] font-medium text-gray-400">09:00 AM</span>
+<span class="h-1 w-1 rounded-full bg-gray-300"></span>
+<span class="text-[10px] font-medium text-gray-400">Subscription</span>
+</div>
+</div>
+</div>
+<p class="font-bold text-red-500 text-sm">-Rp 186.000</p>
+</div>
+</div>
+</section>
+<section>
+<h3 class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-3 pl-1">Jan 22</h3>
+<div class="space-y-3">
+<div class="flex items-center justify-between p-4 rounded-2xl bg-white shadow-sm border border-gray-100 hover:shadow-md transition-all cursor-pointer group">
+<div class="flex items-center gap-3.5">
+<div class="h-12 w-12 rounded-full bg-orange-50 flex items-center justify-center text-orange-600 shadow-sm border border-orange-100 group-hover:bg-primary group-hover:text-black group-hover:border-primary transition-colors">
+<span class="material-symbols-outlined">restaurant</span>
+</div>
+<div class="flex flex-col gap-0.5">
+<p class="text-sm font-bold text-gray-900">Dinner with Friends</p>
+<div class="flex items-center gap-1.5">
+<span class="text-[10px] font-medium text-gray-400">08:30 PM</span>
+<span class="h-1 w-1 rounded-full bg-gray-300"></span>
+<span class="text-[10px] font-medium text-gray-400">Food</span>
+</div>
+</div>
+</div>
+<p class="font-bold text-red-500 text-sm">-Rp 450.000</p>
+</div>
+</div>
+</section>
+</div>
+</main>
+</div>
+</body></html>

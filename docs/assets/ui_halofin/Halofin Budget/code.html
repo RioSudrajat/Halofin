@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>BudgetIn Budget Planning</title>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#ccff00",
+                        "primary-dark": "#b3e600",
+                        "accent-blue": "#b2f5ea",
+                        "background-light": "#ffffff",
+                        "background-off": "#f8f9fa",
+                        "text-main": "#1a1a1a",
+                        "text-muted": "#6b7280",
+                        "nav-bg": "#fcfef0",
+                    },
+                    fontFamily: {
+                        "display": ["Manrope", "sans-serif"]
+                    },
+                    borderRadius: { "DEFAULT": "1rem", "lg": "1.5rem", "xl": "2rem", "2xl": "2.5rem", "full": "9999px" },
+                    boxShadow: {
+                        'soft': '0 4px 20px -2px rgba(0, 0, 0, 0.05)',
+                        'card': '0 2px 10px rgba(0, 0, 0, 0.03)',
+                        'card-float': '0 10px 40px -10px rgba(0, 0, 0, 0.08)',
+                        'nav-glow': '0 10px 30px -5px rgba(0, 0, 0, 0.08)',
+                        'fab-shadow': '0 8px 16px -4px rgba(204, 255, 0, 0.4)',
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        body {
+            min-height: max(884px, 100dvh);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light font-display antialiased text-text-main transition-colors duration-300">
+<div class="relative flex min-h-screen w-full flex-col max-w-md mx-auto overflow-hidden pb-24 shadow-2xl bg-white">
+<header class="flex items-center justify-center px-5 pt-6 pb-2 relative">
+<div class="flex items-center gap-1 cursor-pointer">
+<h2 class="text-xl font-bold leading-tight text-text-main">January 2026</h2>
+<span class="material-symbols-outlined text-text-main text-lg">expand_more</span>
+</div>
+</header>
+<main class="flex-1 overflow-y-auto hide-scrollbar">
+<section class="px-5 py-2">
+<div class="flex bg-gray-50 p-1 rounded-2xl w-full">
+<button class="flex-1 py-2.5 rounded-xl text-sm font-medium text-gray-500 hover:text-gray-900 transition-colors">
+                    Goals
+                </button>
+<button class="flex-1 py-2.5 rounded-xl bg-white text-sm font-bold text-gray-900 shadow-sm transition-all border border-gray-100">
+                    Budget
+                </button>
+<button class="flex-1 py-2.5 rounded-xl text-sm font-medium text-gray-500 hover:text-gray-900 transition-colors">
+                    Bills
+                </button>
+</div>
+</section>
+<section class="px-5 py-3">
+<div class="w-full rounded-[2.5rem] bg-[#CCFF001A] p-6 flex flex-col relative overflow-hidden shadow-card-float text-text-main backdrop-blur-sm">
+<div class="relative z-10 flex flex-col gap-6">
+<div class="flex justify-between items-start">
+<div class="flex flex-col gap-1">
+<span class="text-xs font-medium text-gray-500">Total Budget</span>
+<h3 class="text-3xl font-bold tracking-tight text-black">Rp 10.000.000</h3>
+</div>
+<div class="bg-white/60 p-2 rounded-full border border-gray-200">
+<span class="material-symbols-outlined text-gray-800">pie_chart</span>
+</div>
+</div>
+<div class="flex flex-col gap-2">
+<div class="flex justify-between text-sm">
+<span class="text-gray-500">Remaining</span>
+<span class="font-bold text-black">Rp 2.500.000</span>
+</div>
+<div class="w-full h-2 bg-gray-200 rounded-full overflow-hidden">
+<div class="h-full bg-primary-dark rounded-full" style="width: 75%"></div>
+</div>
+<div class="flex justify-end">
+<span class="text-[10px] text-gray-600">75% Used</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section class="px-5 pb-24">
+<div class="flex items-center justify-between mb-4">
+<h3 class="text-lg font-bold text-text-main">Categories</h3>
+<button class="text-primary-dark font-semibold text-sm">Tambah</button>
+</div>
+<div class="flex flex-col gap-4">
+<div class="bg-white rounded-2xl p-4 border border-gray-100 shadow-sm flex flex-col gap-3">
+<div class="flex items-center gap-3">
+<div class="h-10 w-10 rounded-full bg-orange-100 flex items-center justify-center text-orange-600">
+<span class="material-symbols-outlined">restaurant</span>
+</div>
+<div class="flex-1">
+<div class="flex justify-between items-center mb-1">
+<span class="font-bold text-gray-900 text-sm">Food &amp; Drink</span>
+<span class="font-bold text-gray-900 text-sm">Rp 4.500.000</span>
+</div>
+<div class="flex justify-between items-center">
+<span class="text-[10px] text-gray-500">Left: Rp 500.000</span>
+<span class="text-[10px] text-gray-400">Total: Rp 5.000.000</span>
+</div>
+</div>
+</div>
+<div class="w-full h-1.5 bg-gray-100 rounded-full overflow-hidden">
+<div class="h-full bg-primary rounded-full" style="width: 90%"></div>
+</div>
+</div>
+<div class="bg-white rounded-2xl p-4 border border-gray-100 shadow-sm flex flex-col gap-3">
+<div class="flex items-center gap-3">
+<div class="h-10 w-10 rounded-full bg-blue-100 flex items-center justify-center text-blue-600">
+<span class="material-symbols-outlined">directions_car</span>
+</div>
+<div class="flex-1">
+<div class="flex justify-between items-center mb-1">
+<span class="font-bold text-gray-900 text-sm">Transport</span>
+<span class="font-bold text-gray-900 text-sm">Rp 1.200.000</span>
+</div>
+<div class="flex justify-between items-center">
+<span class="text-[10px] text-gray-500">Left: Rp 800.000</span>
+<span class="text-[10px] text-gray-400">Total: Rp 2.000.000</span>
+</div>
+</div>
+</div>
+<div class="w-full h-1.5 bg-gray-100 rounded-full overflow-hidden">
+<div class="h-full bg-primary rounded-full" style="width: 60%"></div>
+</div>
+</div>
+<div class="bg-white rounded-2xl p-4 border border-gray-100 shadow-sm flex flex-col gap-3">
+<div class="flex items-center gap-3">
+<div class="h-10 w-10 rounded-full bg-purple-100 flex items-center justify-center text-purple-600">
+<span class="material-symbols-outlined">movie</span>
+</div>
+<div class="flex-1">
+<div class="flex justify-between items-center mb-1">
+<span class="font-bold text-gray-900 text-sm">Entertainment</span>
+<span class="font-bold text-gray-900 text-sm">Rp 800.000</span>
+</div>
+<div class="flex justify-between items-center">
+<span class="text-[10px] text-gray-500">Left: Rp 700.000</span>
+<span class="text-[10px] text-gray-400">Total: Rp 1.500.000</span>
+</div>
+</div>
+</div>
+<div class="w-full h-1.5 bg-gray-100 rounded-full overflow-hidden">
+<div class="h-full bg-primary rounded-full" style="width: 53%"></div>
+</div>
+</div>
+<div class="bg-white rounded-2xl p-4 border border-gray-100 shadow-sm flex flex-col gap-3">
+<div class="flex items-center gap-3">
+<div class="h-10 w-10 rounded-full bg-pink-100 flex items-center justify-center text-pink-600">
+<span class="material-symbols-outlined">shopping_bag</span>
+</div>
+<div class="flex-1">
+<div class="flex justify-between items-center mb-1">
+<span class="font-bold text-gray-900 text-sm">Shopping</span>
+<span class="font-bold text-gray-900 text-sm">Rp 1.000.000</span>
+</div>
+<div class="flex justify-between items-center">
+<span class="text-[10px] text-gray-500">Left: Rp 500.000</span>
+<span class="text-[10px] text-gray-400">Total: Rp 1.500.000</span>
+</div>
+</div>
+</div>
+<div class="w-full h-1.5 bg-gray-100 rounded-full overflow-hidden">
+<div class="h-full bg-primary rounded-full" style="width: 66%"></div>
+</div>
+</div>
+</div>
+</section>
+</main>
+<div class="absolute bottom-6 left-1/2 -translate-x-1/2 z-50 w-full px-5 max-w-[360px]">
+<nav class="bg-nav-bg rounded-[40px] px-2 py-2 flex items-center justify-between shadow-nav-glow border border-gray-200 relative">
+<div class="flex items-center justify-around flex-1">
+<button class="group flex flex-col items-center gap-0.5 min-w-[50px] py-1">
+<span class="material-symbols-outlined text-gray-400 group-hover:text-gray-600 transition-colors text-[24px] font-normal" style="font-variation-settings: 'FILL' 0;">home</span>
+<span class="text-[9px] font-bold text-gray-400 group-hover:text-gray-600 transition-colors">Home</span>
+</button>
+<button class="group flex flex-col items-center gap-0.5 min-w-[50px] py-1">
+<span class="material-symbols-outlined text-primary-dark text-[24px] font-normal" style="font-variation-settings: 'FILL' 1;">account_balance_wallet</span>
+<span class="text-[9px] font-bold text-primary-dark">Budget</span>
+</button>
+</div>
+<div class="relative shrink-0 -top-6">
+<button class="h-14 w-14 bg-primary rounded-full flex items-center justify-center shadow-fab-shadow hover:scale-105 active:scale-95 transition-all border-[4px] border-white z-10">
+<span class="material-symbols-outlined text-black text-[28px] font-bold">add</span>
+</button>
+</div>
+<div class="flex items-center justify-around flex-1">
+<button class="group flex flex-col items-center gap-0.5 min-w-[50px] py-1">
+<span class="material-symbols-outlined text-gray-400 group-hover:text-gray-600 transition-colors text-[24px] font-normal" style="font-variation-settings: 'FILL' 0;">chat_bubble</span>
+<span class="text-[9px] font-bold text-gray-400 group-hover:text-gray-600 transition-colors">Consult</span>
+</button>
+<button class="group flex flex-col items-center gap-0.5 min-w-[50px] py-1">
+<span class="material-symbols-outlined text-gray-400 group-hover:text-gray-600 transition-colors text-[24px] font-normal" style="font-variation-settings: 'FILL' 0;">work</span>
+<span class="text-[9px] font-bold text-gray-400 group-hover:text-gray-600 transition-colors">Asset</span>
+</button>
+</div>
+</nav>
+</div>
+</div>
+</body></html>
