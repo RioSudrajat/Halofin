@@ -3,9 +3,9 @@
 | Field | Value |
 | --- | --- |
 | Project | HaloFin |
-| Document Version | 2.2 |
+| Document Version | 2.3 |
 | Status | Baseline For Phase-Based MVP Delivery |
-| Last Updated | 2026-03-09 |
+| Last Updated | 2026-03-11 |
 | Audience | Engineering, DevOps, AI Coding Agent |
 
 ## Change Summary
@@ -311,3 +311,32 @@ Saat repo aplikasi mulai dibuat, lakukan ini agar dokumen dan implementasi tetap
 4. Putuskan provider finansial dan payment gateway primary atau fallback.
 5. Tetapkan app-per-directory layout sesuai app surface yang direncanakan.
 6. Pastikan seluruh tim memahami phase aktif dan stack yang boleh dipakai pada phase tersebut.
+
+## 19. Code Quality And Performance Tools
+
+| Category | Mobile (Flutter) | Web (Next.js) | Backend (Go) |
+| --- | --- | --- | --- |
+| Linting | `dart analyze` (built-in) | ESLint | `go vet`, `golangci-lint` |
+| Formatting | `dart format` | Prettier | `gofmt` |
+| Static analysis | `dart analyze --fatal-infos` | TypeScript strict mode | `staticcheck` |
+| Code coverage | `flutter test --coverage` + `lcov` | Vitest coverage | `go test -coverprofile` |
+| Performance profiling | Flutter DevTools | Lighthouse, Chrome DevTools | `pprof` |
+| Bundle size monitoring | `flutter build --analyze-size` | `@next/bundle-analyzer` | `go build` binary size check |
+| Security scanning | `flutter pub outdated` | `npm audit`, Dependabot | `govulncheck`, Dependabot |
+
+### Coverage Enforcement
+
+1. Coverage thresholds enforced in CI (details in [testing-strategy.md](./testing-strategy.md)).
+2. PR cannot merge if coverage drops below threshold.
+3. New code must include tests.
+
+## 20. Related Documents
+
+| Document | Relation |
+| --- | --- |
+| [API Design Guidelines](./api-design.md) | RESTful conventions for backend |
+| [Database Strategy](./database.md) | Schema, migration, seed |
+| [Testing Strategy](./testing-strategy.md) | Test pyramid, coverage |
+| [Dev Setup Guide](../guides/dev-setup.md) | How to set up local environment |
+| [Engineering Standards](../guides/engineering-standards.md) | Branch model, commit, PR rules |
+| [CI/CD Pipeline](../guides/ci-cd-pipeline.md) | Pipeline stages and deployment |
