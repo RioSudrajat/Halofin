@@ -321,7 +321,7 @@ Pada fase aktif, mobile app tidak lagi diperlakukan sebagai kumpulan screen gene
 
 | MobileRouteKey | Screen Cluster | Mock Data Boundary |
 | --- | --- | --- |
-| `onboarding` | Registration, wallet setup, category selection | onboarding state, wallet creation mock |
+| `onboarding` | Registration, wallet setup, goal setting | onboarding state, wallet creation mock |
 | `home` | Dashboard utama, quick actions, expert help, recent activity | dashboard summary, expert help preview, recent activity preview |
 | `wallet` | Wallet overview with asset distribution | wallet list, asset distribution, sort and filter state |
 | `budget` | Budget summary and category list | budget summary, budget category list |
@@ -533,34 +533,45 @@ sequenceDiagram
     A->>DB: Create final Transaction
 ```
 
-### 13.2 Provider Sync Review Flow
+### 13.2 Provider Sync Review Flow (Brick / Ayoconnect)
 
-1. User memulai koneksi akun melalui provider flow yang di-embed di client.
-2. Provider mengelola autentikasi dan mengirim callback atau webhook ke Go application service.
-3. Service memverifikasi signature, melakukan deduplication, menormalisasi payload, lalu membuat DraftTransaction.
-4. ProviderConnection dan sync status diperbarui.
-5. Notification dikirim ke user bahwa ada draft baru untuk ditinjau.
-6. Event realtime atau polling memberi tahu client bahwa ada draft baru untuk ditinjau.
-7. User mengonfirmasi, mengedit, atau menolak draft satu per satu atau secara bulk sesuai aturan produk.
+1. User memulai koneksi akun melalui provider widget (webview) yang di-embed di client.
+2. User memasukkan kredensial login bank/e-wallet langsung ke widget provider (HaloFin tidak merekam kredensial ini).
+3. Setelah login sukses, provider mengembalikan `access_token` ke mobile app, yang kemudian diteruskan dan disimpan terenkripsi di Go application service.
+4. Go application service secara periodik atau on-demand memanggil REST API provider (`GET /transactions`) menggunakan `access_token` tersebut.
+5. Service memverifikasi mutasi, melakukan deduplication, mengklasifikasi kategori dengan AI, lalu membuat DraftTransaction.
+6. Notifikasi dikirim ke user bahwa ada draft baru untuk ditinjau.
+7. User mengonfirmasi, mengedit, atau menolak draft di dalam app. Approval mengubah draft menjadi Transaction final.
 
 ```mermaid
 sequenceDiagram
     participant U as User
     participant M as Mobile App
-    participant P as Financial Data Provider
+    participant P as Provider Widget
     participant A as Go Application Service
+    participant API as Provider API
     participant DB as Supabase
 
-    U->>M: Start connect account flow
-    M->>P: Open provider connection flow
-    P-->>A: Send callback or webhook
-    A->>A: Verify signature and deduplicate
+    Note over U,DB: 1. Account Linking
+    U->>M: Connect Bank/E-Wallet
+    M->>P: Open embedded widget
+    U->>P: Input bank credentials (secure)
+    P-->>M: Return access_token
+    M->>A: Save access_token
+    A->>DB: Update ProviderConnection (connected)
+
+    Note over U,DB: 2. Fetch Transactions
+    A->>API: GET /transactions
+    API-->>A: Return historical data
+    A->>A: Deduplicate & AI Categorize
     A->>DB: Save DraftTransaction(review_needed)
-    A->>DB: Update ProviderConnection and sync status
     A->>DB: Create Notification(draft_review)
-    DB-->>M: Realtime update or poll result
-    M-->>U: Show draft review list
-    U->>M: Confirm, edit, or reject
+    
+    Note over U,DB: 3. User Review
+    M-->>U: Show draft notifications
+    U->>M: Review, Edit Category, Confirm
+    M->>A: Approve Draft
+    A->>DB: Convert to final Transaction
 ```
 
 ### 13.3 Recommendation Eligibility Flow

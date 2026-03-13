@@ -60,6 +60,7 @@ CREATE TABLE wallets (
     user_id UUID NOT NULL REFERENCES users(user_id),
     name TEXT NOT NULL,
     type TEXT NOT NULL CHECK (type IN ('cash', 'bank', 'e_wallet', 'investment')),
+    sync_mode TEXT NOT NULL DEFAULT 'manual' CHECK (sync_mode IN ('manual', 'auto')),
     currency TEXT NOT NULL DEFAULT 'IDR',
     balance BIGINT NOT NULL DEFAULT 0,
     icon_url TEXT,

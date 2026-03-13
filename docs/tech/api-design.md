@@ -54,8 +54,10 @@ https://api.halofin.id/api/v1/transactions
 
 ```
 GET    /api/v1/wallets                          # List wallets
+GET    /api/v1/wallets/institutions             # List supported institutions for sync
 GET    /api/v1/wallets/{wallet_id}              # Get wallet detail
-POST   /api/v1/wallets                          # Create wallet
+POST   /api/v1/wallets                          # Create wallet manual
+POST   /api/v1/wallets/connect                  # Connect auto-sync wallet
 PATCH  /api/v1/wallets/{wallet_id}              # Update wallet
 DELETE /api/v1/wallets/{wallet_id}              # Archive wallet
 
@@ -75,12 +77,16 @@ PUT    /api/v1/notifications/preferences        # Update preferences
 
 GET    /api/v1/consultants                      # List consultants
 GET    /api/v1/consultants/{id}                 # Get consultant detail
+
 POST   /api/v1/bookings                         # Create booking
+GET    /api/v1/sessions                         # List active/past branch sessions (My Orders)
+GET    /api/v1/sessions/{session_id}            # Get session details
 
 POST   /api/v1/exports/csv                      # Trigger CSV export
 POST   /api/v1/exports/pdf                      # Trigger PDF export
 
 GET    /api/v1/currency/rates                   # Get current rates
+POST   /api/v1/users/goals                      # Setup financial goals (Onboarding)
 ```
 
 ## 6. Request Format
@@ -256,8 +262,10 @@ When rate limited, return `429` with `Retry-After` header.
 4. Old versions deprecated with minimum 3-month notice.
 5. For MVP, only `v1` exists.
 
-## 13. API Documentation
+## 13. API Documentation (Swagger/OpenAPI)
 
-1. OpenAPI 3.0 spec auto-generated from handler annotations or maintained manually.
-2. Spec file lives at `services/api/openapi.yaml`.
-3. Interactive documentation available at `/api/docs` on staging (disabled in production).
+1. **Swagger / OpenAPI 3.0** adalah standar wajib untuk dokumentasi semua kontrak API HaloFin.
+2. Spec file OpenAPI harus di-maintain dalam repository backend (contoh: `docs/swagger.yaml` atau menggunakan auto-generation tools seperti `swaggo/swag` di Go).
+3. **Swagger UI** harus tersedia secara interaktif di environment *development* dan *staging* pada *path* `/api/docs` atau `/swagger/index.html`.
+4. Swagger UI ini akan digunakan oleh *Frontend Developer* dan *Mobile Developer* sebagai *Single Source of Truth* untuk mock data dan struktur response API selama fase pengembangan.
+5. Akses ke Swagger UI harus di-disable di environment *production* demi keamanan.

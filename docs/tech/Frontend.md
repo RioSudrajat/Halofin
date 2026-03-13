@@ -143,11 +143,12 @@ Aturan sumber desain:
 ### Global Visual Patterns
 
 1. Font family utama adalah `Manrope`.
-2. Active state dan CTA utama memakai aksen lime terang.
-3. Card, chip, dan tab memakai sudut membulat besar.
-4. Bottom navigation konsisten muncul pada screen utama.
-5. Tema dominan adalah light theme dengan soft shadow dan spacing longgar.
-6. Hierarki visual mengandalkan hero card besar di atas, lalu section modular ke bawah.
+2. Primary Brand Color adalah **Lime Green**. Active state dan CTA utama menggunakan aksen lime terang ini.
+3. App Logo: Menggunakan logo icon berbentuk inisial huruf "HF" berwarna putih dengan background bulat warna Lime Green. Muncul di splash screen, auth header, dan onboarding.
+4. Card, chip, dan tab memakai sudut membulat besar.
+5. Bottom navigation konsisten muncul pada screen utama.
+6. Tema dominan adalah light theme dengan soft shadow dan spacing longgar.
+7. Hierarki visual mengandalkan hero card besar di atas, lalu section modular ke bawah.
 
 ### Reusable Mobile Primitives
 
@@ -278,7 +279,8 @@ ASCII layout:
 
 ```text
 .--------------------------------------------------.
-|  Welcome back, Alex Morgan        o      ( )     |
+|  [(HF) HaloFin]        o      ( )     |
+|  Welcome back, Alex Morgan                        |
 |  January 2026                                     |
 |  .----------. .-------------------------------.  |
 |  |  pie     | |   TOTAL BALANCE               |  |
@@ -290,12 +292,12 @@ ASCII layout:
 |   (B)         (H)         (S)         (R)   (Bi) |
 |  Budget      History      Score      Report Bills|
 |                                                  |
-|  Expert Help                           View all  |
-|  .----------------.  .------------------------.  |
-|  | Sarah Jenkins  |  | Mike Thompson          |  |
-|  | Tax Consultant |  | Financial Planner      |  |
-|  | Rp 75k   Chat  |  | Rp 125k         Chat   |  |
-|  '----------------'  '------------------------'  |
+|  Sorotan untukmu                       ( . o . ) |
+|  < .----------------------------------------. >  |
+|    | ⭐ Match Expert                         |    |
+|    | Temukan konsultan yang pas sesuai      |    |
+|    | budget dan masalah finansialmu.        |    |
+|    '----------------------------------------'    |
 |                                                  |
 |  Keuangan Bulan Ini                              |
 |  .--------------------------------------------.  |
@@ -311,6 +313,7 @@ ASCII layout:
 |  | Netflix                       -Rp 186.000  |  |
 |  '--------------------------------------------'  |
 |                                                  |
+|                                           [💬]   |
 |   Home      Budget       (+)     Consult Wallet |
 '--------------------------------------------------'
 ```
@@ -321,11 +324,12 @@ Section breakdown:
 2. `section_month_label`
 3. `section_total_balance_hero`
 4. `section_quick_actions`
-5. `section_active_consultation` **(NEW)**
-6. `section_expert_help`
+5. `section_active_consultation` (Muncul jika ada sesi aktif)
+6. `section_carousel_banners` (Match Expert, Smart Recommendation, Promo)
 7. `section_monthly_finance`
 8. `section_recent_activity`
-9. `section_bottom_nav`
+9. `section_branch_session_fab` (Floating Action Button)
+10. `section_bottom_nav`
 
 Slice units:
 
@@ -340,10 +344,11 @@ Reusable components:
 1. `component_user_header`
 2. `component_total_balance_card`
 3. `component_quick_action_item`
-4. `component_consultant_mini_card`
+4. `component_carousel_banner` (Image/Text with swipe dots)
 5. `component_budget_summary_card`
 6. `component_recent_transaction_row`
-7. `component_bottom_nav`
+7. `component_fab_button` (Icon Chat bulat)
+8. `component_bottom_nav`
 
 Mock data needs:
 
@@ -352,26 +357,96 @@ Mock data needs:
 3. Total balance summary
 4. Portfolio split preview
 5. Quick actions metadata
-6. Expert help list
+6. Carousel banner list (Match Expert, Recommendation, Partnerships)
 7. Monthly finance summary
 8. Recent transactions preview
 
 State penting:
 
 1. `state_loading_dashboard`
-2. `state_empty_expert_help`
-3. `state_empty_recent_activity`
-4. `state_error_dashboard`
+2. `state_empty_recent_activity`
+3. `state_error_dashboard`
 
 Catatan implementasi:
 
 1. Hero card adalah focal point utama screen.
 2. Quick actions lebih cocok di-slice sebagai grid horizontal icon label.
-3. Expert help dan recent activity harus dipisah menjadi section modular.
-4. Bottom nav active state ada pada `Home`.
-5. `section_active_consultation` muncul di antara quick actions dan expert help. Di empty state, tampilkan CTA "Belum ada sesi aktif — Cari konsultan". Saat ada booking aktif, tampilkan card dengan nama consultant, jadwal, countdown timer, dan status.
+3. Banner promosional menggunakan PageView/Carousel dengan dot indicator di atas atau bawah. Slide 1 (Match Expert), Slide 2 (Smart Recommendation), Slide 3+ (Event/Partnership).
+4. Tombol FAB (Branch Session) diletakkan *di atas* bottom navigation bar pada sisi kanan bawah agar tidak nabrak navbar. Tap FAB membuka `screen_branch_session`.
+5. `section_active_consultation` muncul di antara quick actions dan banner carousel. Di empty state, hilang/disembunyikan.
 6. Quick action `Report` mengarah ke `screen_reporting_portfolio`.
 7. Quick action `View Portfolio` (pada hero balance card) juga mengarah ke `screen_reporting_portfolio`.
+
+### `screen_branch_session`
+
+Tujuan screen:
+Bertindak sebagai repositori (inbox) user untuk semua sesi konsultasi, chat, janji temu, dan pesanan jasa finansial. Diakses melalui Floating Action Button di `screen_home`.
+
+ASCII layout:
+
+```text
+.--------------------------------------------------.
+|  <  Sesi & Konsultasi             [🔍 Search]    |
+|                                                  |
+|  [ Semua ] [ Aktif ] [ Selesai ] [ Batal ]       |
+|                                                  |
+|  ----------------------------------------------  |
+|                                                  |
+|  AKTIF                                           |
+|  .--------------------------------------------.  |
+|  | [Avatar] Sarah Jenkins           [ Chat ]  |  |
+|  | Tax Consultant                             |  |
+|  | Sesi: Konsultasi SPT Tahunan (3 Hari)      |  |
+|  | Sisa Waktu: 1 Hari 4 Jam                   |  |
+|  '--------------------------------------------'  |
+|                                                  |
+|  AKTIF (Menunggu Jadwal)                         |
+|  .--------------------------------------------.  |
+|  | [Avatar] Budi Santoso          [ Detail ]  |  |
+|  | Financial Planner                          |  |
+|  | Sesi: Virtual Meet (Zoom)                  |  |
+|  | Jadwal: Besok, 10:00 WIB                   |  |
+|  '--------------------------------------------'  |
+|                                                  |
+|  SELESAI                                         |
+|  .--------------------------------------------.  |
+|  | [Avatar] PT HaloFin Insurance   [ Nilai ]  |  |
+|  | Review Portofolio Asuransi                 |  |
+|  | Selesai pada: 12 Jan 2026                  |  |
+|  '--------------------------------------------'  |
+|                                                  |
+'--------------------------------------------------'
+```
+
+Section breakdown:
+
+1. `section_header_with_search`
+2. `section_status_filters` (Semua, Aktif, Selesai, Batal)
+3. `section_session_list`
+
+Reusable components:
+
+1. `component_back_header`
+2. `component_chip_filter_row`
+3. `component_session_card` (Avatar, Name, Role, Package Info, Status/Timer, Action Button)
+
+Mock data needs:
+
+1. List of mock sessions across various statuses (Active chat, Scheduled meet, Completed, Cancelled).
+
+State penting:
+
+1. `state_loading`
+2. `state_empty` (Belum ada riwayat sesi)
+3. `state_empty_filtered` (Kosong di tab tertentu)
+4. `state_list_populated`
+
+Catatan implementasi:
+1. Kartu `[ Chat ]` akan membuka layar chat `screen_consultation_chat`.
+2. Kartu `[ Detail ]` akan membuka rincian pesanan jika sesi berupa janji temu video.
+3. Layar ini berbeda dari `screen_consult_list` (yang berfungsi sebagai marketplace/toko). Layar ini adalah "Inbox / My Orders".
+
+---
 
 ### `screen_consult_list`
 
@@ -382,7 +457,7 @@ ASCII layout:
 
 ```text
 .--------------------------------------------------.
-|                 Consultation                o    |
+|  [(HF) HaloFin]     Consultation            o    |
 |  .--------------------------------------------.  |
 |  |  search consultant or location...         |  |
 |  '--------------------------------------------'  |
@@ -652,7 +727,7 @@ ASCII layout:
 
 ```text
 .--------------------------------------------------.
-|  January 2026                        o      ( )  |
+|  [(HF) HaloFin]     January 2026       o    ( )  |
 |  .--------------------------------------------.  |
 |  |         asset distribution donut           |  |
 |  |    Cash 35%   Bank 30%   Crypto 20%        |  |
@@ -737,7 +812,7 @@ ASCII layout:
 
 ```text
 .--------------------------------------------------.
-|                 January 2026                     |
+|  [(HF) HaloFin]     January 2026                 |
 |      .----------. .----------. .----------.      |
 |      | Goals    | | Budget   | | Bills    |      |
 |      '----------' '----------' '----------'      |
@@ -822,7 +897,7 @@ ASCII layout:
 
 ```text
 .--------------------------------------------------.
-|                 January 2026                     |
+|  [(HF) HaloFin]     January 2026                 |
 |      .----------. .----------. .----------.      |
 |      | Goals    | | Budget   | | Bills    |      |
 |      '----------' '----------' '----------'      |
@@ -908,7 +983,7 @@ ASCII layout:
 
 ```text
 .--------------------------------------------------.
-|                 January 2026                     |
+|  [(HF) HaloFin]     January 2026                 |
 |      .----------. .----------. .----------.      |
 |      | Goals    | | Budget   | | Bills    |      |
 |      '----------' '----------' '----------'      |
@@ -1150,7 +1225,7 @@ ASCII layout:
 ```text
 .--------------------------------------------------.
 |                                                  |
-|            [  HaloFin Logo  ]                    |
+|         [ (HF) HaloFin Logo (Lime) ]             |
 |                                                  |
 |         Buat akun baru                           |
 |         Mulai perjalanan keuanganmu              |
@@ -1231,6 +1306,8 @@ ASCII layout:
 
 ```text
 .--------------------------------------------------.
+|                                                  |
+|             [ (HF) HaloFin Logo ]                |
 |                                                  |
 |                   [illustration]                 |
 |                   Kelola keuangan                |
@@ -1366,29 +1443,40 @@ Catatan implementasi:
 Tujuan screen:
 Membantu user memilih kategori pengeluaran yang relevan. Step 3 (opsional, bisa di-skip).
 
+ASCII layout:### `screen_onboarding_set_goal`
+
+Tujuan screen:
+Membantu user menetapkan tujuan finansial pertama mereka di HaloFin (hook untuk retensi).
+
 ASCII layout:
 
 ```text
 .--------------------------------------------------.
-|  <  Personalisasi Keuangan                       |
+|  <  Pilih Tujuan Utamamu                         |
 |                                                  |
 |  .  .  o  (progress dots: 3 of 3)               |
 |                                                  |
-|  Pilih kategori yang sering kamu pakai:          |
-|  (kamu bisa ubah ini nanti di settings)          |
-|                                                  |
-|  [🍔 Makan & Minum]   [🚗 Transportasi]          |
-|  [🎬 Hiburan]          [🛒 Belanja]               |
-|  [❤️ Kesehatan]        [🎓 Pendidikan]             |
-|  [💳 Tagihan]          [💇 Personal Care]          |
-|  [💼 Gaji]             [💰 Freelance]              |
-|  [📈 Investasi]                                    |
-|                                                  |
-|                                                  |
-|  5 kategori dipilih                              |
+|  Apa yang ingin kamu capai dengan HaloFin?       |
+|  (kamu bisa tambah tujuan lain nanti)            |
 |                                                  |
 |  .--------------------------------------------.  |
-|  |     [  Mulai Pakai HaloFin  ]              |  |
+|  | 🛡️ Kumpulin Dana Darurat                  >|  |
+|  | Bikin jaring pengaman buat masa depan      |  |
+|  '--------------------------------------------'  |
+|                                                  |
+|  .--------------------------------------------.  |
+|  | 🏖️ Liburan Impian                         >|  |
+|  | Rencanakan budget buat jalan-jalan         |  |
+|  '--------------------------------------------'  |
+|                                                  |
+|  .--------------------------------------------.  |
+|  | 📉 Lunasin Hutang/Cicilan                 >|  |
+|  | Pantau dan selesaikan kewajibanmu          |  |
+|  '--------------------------------------------'  |
+|                                                  |
+|  .--------------------------------------------.  |
+|  | 💸 Investasi & Pertumbuhan Asset          >|  |
+|  | Kembangkan kekayaan jangka panjang         |  |
 |  '--------------------------------------------'  |
 |                                                  |
 |              Skip untuk sekarang                 |
@@ -1400,36 +1488,31 @@ Section breakdown:
 
 1. `section_header_with_back`
 2. `section_progress_dots`
-3. `section_category_grid`
-4. `section_selection_count`
-5. `section_cta`
+3. `section_goal_list`
+4. `section_cta`
 
 Reusable components:
 
 1. `component_back_header`
 2. `component_progress_dots`
-3. `component_selectable_category_chip` (toggle state, icon + label)
-4. `component_primary_button` ("Mulai Pakai HaloFin")
-5. `component_text_link` ("Skip untuk sekarang")
+3. `component_list_tile_card` (icon, title, subtitle, chevron)
+4. `component_text_link` ("Skip untuk sekarang")
 
 Mock data needs:
 
-1. Default category list with icons and labels
-2. Selection state per category
+1. Default goal templates with icons, titles, and descriptions
 
 State penting:
 
-1. `state_no_selection`
-2. `state_categories_selected`
-3. `state_loading_save`
-4. `state_success` (navigate to home)
+1. `state_idle`
+2. `state_loading_save`
+3. `state_success` (navigate to home)
 
 Catatan implementasi:
 
-1. Step ini bisa di-skip; semua default categories tetap aktif.
-2. Jika user pilih, hanya kategori terpilih yang muncul di transaction entry dan budget.
-3. Categories yang tidak dipilih tidak dihapus, hanya de-prioritized.
-4. Setelah step ini selesai, set onboarding_completed = true, navigate ke home.
+1. Saat card di-tap, langsung simpan goal (menggunakan template default target) dan set `onboarding_completed = true`, lalu navigate ke home.
+2. Step ini bisa di-skip; user bisa membuat goal dari tab Budget/Goals nanti.
+3. Menggantikan screen kategori (kategori menggunakan standard 20 default system categories).
 
 ### `screen_booking_service`
 
@@ -1440,8 +1523,8 @@ ASCII layout:
 
 ```text
 .--------------------------------------------------.
-|  <  Pilih Layanan                   Step 1 of 4 |
-|                                                  |
+|  <  Pilih Layanan                                |
+|  1 Layanan ---- 2 Waktu ---- 3 Pre-Konsult...    |
 |  .--------------------------------------------.  |
 |  |         [ Foto Consultant ]                |  |
 |  |  Sarah Jenkins                             |  |
@@ -1483,16 +1566,18 @@ ASCII layout:
 
 Section breakdown:
 
-1. `section_header_with_step`
-2. `section_consultant_preview`
-3. `section_service_tier_list`
-4. `section_cta`
+1. `section_header`
+2. `section_sliding_stepper`
+3. `section_consultant_preview`
+4. `section_service_tier_list`
+5. `section_cta`
 
 Reusable components:
 
-1. `component_back_header_with_step` (back + "Step X of 4")
-2. `component_consultant_mini_preview` (foto, nama, title)
-3. `component_service_tier_card` (selectable, with badge for popular, benefit list, price)
+1. `component_back_header`
+2. `component_sliding_stepper` (animated horizontally)
+3. `component_consultant_mini_preview` (foto, nama, title)
+4. `component_service_tier_card` (selectable, with badge for popular, benefit list, price)
 4. `component_primary_button` ("Lanjutkan", disabled until tier selected)
 
 Mock data needs:
@@ -1525,8 +1610,8 @@ ASCII layout:
 
 ```text
 .--------------------------------------------------.
-|  <  Pilih Waktu                     Step 2 of 4 |
-|                                                  |
+|  <  Pilih Waktu                                  |
+|  ... -- 2 Waktu ---- 3 Pre-Konsultasi ---- 4...  |
 |  Maret 2026                              >      |
 |  .--------------------------------------------.  |
 |  | Sen  Sel  Rab  Kam  Jum  Sab  Min          |  |
@@ -1554,17 +1639,19 @@ ASCII layout:
 
 Section breakdown:
 
-1. `section_header_with_step`
-2. `section_calendar`
-3. `section_available_slots`
-4. `section_timezone_notice`
-5. `section_cta`
+1. `section_header`
+2. `section_sliding_stepper`
+3. `section_calendar`
+4. `section_available_slots`
+5. `section_timezone_notice`
+6. `section_cta`
 
 Reusable components:
 
-1. `component_back_header_with_step`
-2. `component_calendar_grid` (month view, navigable, dates with/without availability)
-3. `component_time_slot_chip` (selectable, disabled for unavailable)
+1. `component_back_header`
+2. `component_sliding_stepper`
+3. `component_calendar_grid` (month view, navigable, dates with/without availability)
+4. `component_time_slot_chip` (selectable, disabled for unavailable)
 4. `component_primary_button` ("Lanjutkan", disabled until date + time selected)
 
 Mock data needs:
@@ -1597,8 +1684,8 @@ ASCII layout:
 
 ```text
 .--------------------------------------------------.
-|  <  Pre-Konsultasi                  Step 3 of 4 |
-|                                                  |
+|  <  Pre-Konsultasi                               |
+|  -- 3 Pre-Konsultasi ---- 4 Konfirmasi Pembayaran |
 |  Topik yang ingin dibahas:                       |
 |  [Tax Planning]  [Annual Report]  [NPWP]         |
 |  [Pelaporan SPT] [Lainnya...]                    |
@@ -1643,20 +1730,22 @@ ASCII layout:
 
 Section breakdown:
 
-1. `section_header_with_step`
-2. `section_topic_selector`
-3. `section_problem_description`
-4. `section_expectation_notes`
-5. `section_document_upload`
-6. `section_data_agreement`
-7. `section_cta`
+1. `section_header`
+2. `section_sliding_stepper`
+3. `section_topic_selector`
+4. `section_problem_description`
+5. `section_expectation_notes`
+6. `section_document_upload`
+7. `section_data_agreement`
+8. `section_cta`
 
 Reusable components:
 
-1. `component_back_header_with_step`
-2. `component_selectable_topic_chip` (multi-select, sesuai expertise consultant)
-3. `component_textarea_input` (deskripsi masalah, harapan)
-4. `component_file_upload_area` (upload trigger, file list, remove)
+1. `component_back_header`
+2. `component_sliding_stepper`
+3. `component_selectable_topic_chip` (multi-select, sesuai expertise consultant)
+4. `component_textarea_input` (deskripsi masalah, harapan)
+5. `component_file_upload_area` (upload trigger, file list, remove)
 5. `component_uploaded_file_card` (thumbnail, filename, size, remove button)
 6. `component_checkbox` (agreement)
 7. `component_primary_button` ("Lanjutkan", disabled until agreement checked)
@@ -1695,8 +1784,8 @@ ASCII layout:
 
 ```text
 .--------------------------------------------------.
-|  <  Konfirmasi Pembayaran           Step 4 of 4 |
-|                                                  |
+|  <  Konfirmasi Pembayaran                        |
+|  -- 4 Konfirmasi Pembayaran  |
 |  Rincian Booking                                 |
 |  .--------------------------------------------.  |
 |  | Konsultan    Sarah Jenkins                 |  |
@@ -1732,17 +1821,19 @@ ASCII layout:
 
 Section breakdown:
 
-1. `section_header_with_step`
-2. `section_booking_summary`
-3. `section_price_breakdown`
-4. `section_payment_method`
-5. `section_cta`
+1. `section_header`
+2. `section_sliding_stepper`
+3. `section_booking_summary`
+4. `section_price_breakdown`
+5. `section_payment_method`
+6. `section_cta`
 
 Reusable components:
 
-1. `component_back_header_with_step`
-2. `component_booking_summary_card` (detail consultant, paket, waktu, topik)
-3. `component_price_breakdown_card` (line items, fee, total)
+1. `component_back_header`
+2. `component_sliding_stepper`
+3. `component_booking_summary_card` (detail consultant, paket, waktu, topik)
+4. `component_price_breakdown_card` (line items, fee, total)
 4. `component_payment_method_radio` (radio group: transfer, QRIS, e-wallet, kartu)
 5. `component_primary_button` ("Bayar Rp X", disabled until payment method selected)
 
@@ -1871,6 +1962,396 @@ Catatan implementasi:
 7. Filter periode (bulanan) dan filter wallet (semua / spesifik wallet).
 8. "View Portfolio" pada hero card di home screen mengarah langsung ke sini.
 
+### `screen_add_wallet_institution`
+
+Tujuan screen:
+Langkah pertama menambahkan wallet (dari Home/Wallet tab). Menampilkan semua list institusi (Bank, E-Wallet, Crypto, Emas, dll). Jika institusi support Auto-Sync, berikan badge khusus dan tawarkan pilihan metode (Auto vs Manual) via Bottom Sheet.
+
+ASCII layout:
+
+```text
+.--------------------------------------------------.
+|  <  Tambah Wallet Baru                           |
+|                                                  |
+|  [🔍 Cari bank, e-wallet, atau aset...]          |
+|                                                  |
+|  Bank Populer                                    |
+|  .--------------------------------------------.  |
+|  | [BCA Logo] BCA                   [⚡ Auto] >|  |
+|  | [MDR Logo] Mandiri               [⚡ Auto] >|  |
+|  | [BRI Logo] BRI                   [⚡ Auto] >|  |
+|  | [BSI Logo] Bank Syariah Ind...             >|  |
+|  '--------------------------------------------'  |
+|                                                  |
+|  E-Wallet                                        |
+|  .--------------------------------------------.  |
+|  | [GPY Logo] GoPay                 [⚡ Auto] >|  |
+|  | [OVO Logo] OVO                   [⚡ Auto] >|  |
+|  | [DNA Logo] DANA                  [⚡ Auto] >|  |
+|  | [SPY Logo] ShopeePay                       >|  |
+|  '--------------------------------------------'  |
+|                                                  |
+|  Investasi & Aset Lainnya                        |
+|  .--------------------------------------------.  |
+|  | [STK Logo] Stockbit                        >|  |
+|  | [PNT Logo] Pintu Crypto                    >|  |
+|  | [GLD Logo] Emas Fisik/Digital              >|  |
+|  | [CSH Logo] Cash / Dompet Tunai             >|  |
+|  '--------------------------------------------'  |
+'--------------------------------------------------'
+
+-- Saat institusi dengan [⚡ Auto] di-tap (cth: BCA) --
+
+.--------------------------------------------------.
+| [  Bottom Sheet: Pilih Metode Sinkronisasi  ]    |
+|                                                  |
+|  Kamu mau input data BCA kamu secara otomatis    |
+|  atau manual?                                    |
+|                                                  |
+|  .--------------------------------------------.  |
+|  | ⚡ Hubungkan Otomatis (Rekomendasi)        |  |
+|  | Transaksi akan ditarik otomatis dari bank. |  |
+|  | Aman, terenkripsi, tanpa simpan password.  |  |
+|  '--------------------------------------------'  |
+|                                                  |
+|  .--------------------------------------------.  |
+|  | 📝 Input Manual                            |  |
+|  | Kamu yang masukin saldo dan transaksi      |  |
+|  | satu per satu tiap ada pengeluaran.        |  |
+|  '--------------------------------------------'  |
+|                                                  |
+|  [ Batal ]                                       |
+'--------------------------------------------------'
+```
+
+Section breakdown:
+
+1. `section_header_with_back`
+2. `section_institution_search`
+3. `section_institution_list` (Bank, E-Wallet, Investment, Cash)
+4. `section_sync_method_bottom_sheet` (Muncul hanya jika institusi support auto-sync)
+5. `section_provider_widget_modal` (Muncul jika pilih Hubungkan Otomatis)
+
+Reusable components:
+
+1. `component_back_header`
+2. `component_search_input`
+3. `component_institution_list_tile` (logo, name, badge auto-sync, chevron)
+4. `component_bottom_sheet`
+5. `component_selection_card` (icon, title, subtitle)
+
+Mock data needs:
+
+1. List of supported institutions, masing-masing dengan property `supports_auto_sync: boolean`.
+
+State penting:
+
+1. `state_idle_list`
+2. `state_searching`
+3. `state_bottom_sheet_open`
+4. `state_webview_connecting` (membuka provider widget)
+5. `state_connection_success`
+6. `state_connection_failed`
+
+Catatan implementasi:
+
+1. Flow baru: User SELALU pilih nama institusi dulu.
+2. Jika `supports_auto_sync == true`, munculkan Bottom Sheet untuk memilih "Auto" atau "Manual".
+3. Jika user pilih "Auto", buka widget Brick/Ayoconnect.
+4. Jika user pilih "Manual", ATAU jika institusi `supports_auto_sync == false` (misal Pintu Crypto), navigasi _langsung_ ke form input manual wallet (memasukkan saldo awal & nama wallet).
+5. Label `[⚡ Auto]` membedakan mana akun yang bisa ditarik mutasinya otomatis dan mana yang harus murni manual input.
+
+### `screen_data_export`
+
+Tujuan screen:
+Memungkinkan user mengekspor data finansial mereka (sesuai UU PDP) dalam format yang berguna untuk reporting eksternal atau backup.
+
+ASCII layout:
+
+```text
+.--------------------------------------------------.
+|  <  Export Data                                  |
+|                                                  |
+|  Pilih format laporan dan data yang ingin        |
+|  kamu download.                                  |
+|                                                  |
+|  Format File                                     |
+|  (o) CSV (Bisa dibuka di Excel/Google Sheets)    |
+|  ( ) PDF (Laporan visual siap baca)              |
+|                                                  |
+|  Pilih Wallet                                    |
+|  [ Semua Wallet                               v] |
+|                                                  |
+|  Tentukan Periode                                |
+|  [ Bulan Ini (Maret 2026)                     v] |
+|                                                  |
+|  Data yang diexport:                             |
+|  - Histori transaksi                             |
+|  - Saldo awal & akhir periode                    |
+|  - Categorization tags                           |
+|                                                  |
+|  .--------------------------------------------.  |
+|  |     [ ⬇️ Download Laporan ]                   |  |
+|  '--------------------------------------------'  |
+'--------------------------------------------------'
+```
+
+Section breakdown:
+
+1. `section_header_with_back`
+2. `section_format_selection` (Radio button group)
+3. `section_wallet_selection` (Dropdown)
+4. `section_period_selection` (Dropdown)
+5. `section_export_cta`
+
+Reusable components:
+
+1. `component_back_header`
+2. `component_radio_tile`
+3. `component_dropdown_select`
+4. `component_primary_button`
+
+Mock data needs:
+
+1. Mock export options
+
+State penting:
+
+1. `state_idle`
+2. `state_generating` (sedang meng-compile file, tunjukkan circular progress)
+3. `state_success` (file siap, trigger OS share/save dialog)
+4. `state_error`
+
+Catatan implementasi:
+Bisa dipanggil dari menu Settings atau langsung dari screen Reporting.
+
+---
+
+### `screen_ai_draft_review`
+
+Tujuan screen:
+Meminta konfirmasi user terhadap DraftTransaction yang dihasilkan oleh AI (baik dari text chat, suara, atau OCR struk) dan dari Auto-Sync sebelum disimpan menjadi transaksi permanen.
+
+ASCII layout:
+
+```text
+.--------------------------------------------------.
+|  <  Review Transaksi                             |
+|                                                  |
+|  .--------------------------------------------.  |
+|  | 🤖 AI mendeteksi transaksi dari struk     |  |
+|  | Silakan periksa kembali detail di bawah.    |  |
+|  '--------------------------------------------'  |
+|                                                  |
+|  Nominal                                         |
+|  [ Rp 125.000                                 ]  |
+|                                                  |
+|  Kategori               Tipe                     |
+|  [ 🍔 Makan & Minum v]  [ 🔻 Pengeluaran    v]    |
+|                                                  |
+|  Tanggal                                         |
+|  [ 13 Mar 2026, 19:30                         ]  |
+|                                                  |
+|  Wallet Sumber                                   |
+|  [ BCA (**** 1234)                          v]   |
+|                                                  |
+|  Catatan (Nama Merchant / Info)                  |
+|  [ McDonald's Thamrin                         ]  |
+|                                                  |
+|  .--------------------------------------------.  |
+|  | [ Hapus ]                  [ Simpan Final ] |  |
+|  '--------------------------------------------'  |
+'--------------------------------------------------'
+```
+
+Section breakdown:
+
+1. `section_header_with_back`
+2. `section_ai_context_banner` (info darimana sumber data ini, misal: Struk, Suara, atau Auto-Sync BCA)
+3. `section_transaction_form` (pre-filled by AI)
+4. `section_action_buttons` (Delete/Reject vs Confirm)
+
+Reusable components:
+
+1. `component_back_header`
+2. `component_info_banner`
+3. `component_text_input`
+4. `component_dropdown_select`
+5. `component_secondary_button`
+6. `component_primary_button`
+
+Mock data needs:
+
+1. DraftTransaction entity pre-filled
+
+State penting:
+
+1. `state_reviewing`
+2. `state_saving`
+3. `state_success`
+
+Catatan implementasi:
+Harus memastikan validation form tetap jalan meskipun AI yang mengisi, untuk mencegah data kotor asuk ke database.
+
+---
+
+### `screen_wallet_detail`
+
+Tujuan screen:
+Menunjukkan detail satu spesifik dompet/rekening. Untuk akun auto-sync, tampilkan last sync time dan opsi re-sync.
+
+ASCII layout:
+
+```text
+.--------------------------------------------------.
+|  <  Detail Wallet                      [⚙️ Edit] |
+|                                                  |
+|  .--------------------------------------------.  |
+|  | [BCA Logo] BCA (Auto-Sync)                 |  |
+|  |                                            |  |
+|  | Saldo Saat Ini                             |  |
+|  | Rp 15.450.000                              |  |
+|  |                                            |  |
+|  | 🔄 Terakhir sync: Hari ini, 08:00          |  |
+|  | [ Sinkronisasi Sekarang ]                  |  |
+|  '--------------------------------------------'  |
+|                                                  |
+|  Trend Saldo (Bulan Ini)                         |
+|  [ Simple Line Chart showing daily balance ]     |
+|                                                  |
+|  Mutasi Terakhir                                 |
+|  [🍔] McDonald's             -Rp 125.000         |
+|       Hari ini, 19:30                            |
+|                                                  |
+|  [💼] Gaji PT ABC         +Rp 10.000.000         |
+|       25 Feb 2026                                |
+|                                                  |
+|  [Lihat Semua Mutasi Wallet Ini]                 |
+'--------------------------------------------------'
+```
+
+Section breakdown:
+
+1. `section_header_with_actions`
+2. `section_wallet_balance_card` (dengan info sync jika auto)
+3. `section_wallet_trend_chart` (opsional)
+4. `section_recent_wallet_activity`
+
+Reusable components:
+
+1. `component_back_header`
+2. `component_transaction_list_tile`
+
+State penting:
+
+1. `state_idle`
+2. `state_syncing` (spinner pada tombol sync)
+3. `state_needs_reauth` (warning banner minta user login ulang ke provider)
+
+---
+
+### `screen_recommendation_detail`
+
+Tujuan screen:
+Menampilkan justifikasi alias *explainable AI* mengapa user menerima rekomendasi tertentu (mengedukasi, bukan sekadar menyuruh).
+
+ASCII layout:
+
+```text
+.--------------------------------------------------.
+|  [x]  Rekomendasi Keuangan                       |
+|                                                  |
+|  .--------------------------------------------.  |
+|  | 🎯 Saran: Pertimbangkan Reksa Dana Pasar |  |
+|  |          Uang untuk Dana Menganggur       |  |
+|  '--------------------------------------------'  |
+|                                                  |
+|  Kenapa kami menyarankan ini?                    |
+|  .--------------------------------------------.  |
+|  | HaloFin AI melihat saldo BCA kamu stabil di|  |
+|  | atas Rp 10.000.000 selama 3 bulan terakhir.|  |
+|  | Daripada uang tunai tergerus inflasi, RD   |  |
+|  | Pasar Uang menawarkan return ~4-5% setahun |  |
+|  | dengan risiko sangat rendah.               |  |
+|  '--------------------------------------------'  |
+|                                                  |
+|  Langkah Selanjutnya                             |
+|  [1] Sisihkan Rp 2.000.000 dulu sebagai test     |
+|  [2] Diskusikan langkah ini dengan konsultan     |
+|                                                  |
+|  .--------------------------------------------.  |
+|  | [ Chat Konsultan ]       [ Paham, Tutup ]   |  |
+|  '--------------------------------------------'  |
+'--------------------------------------------------'
+```
+
+Section breakdown:
+
+1. `section_modal_header`
+2. `section_recommendation_title`
+3. `section_ai_explanation_box`
+4. `section_action_steps`
+5. `section_action_buttons`
+
+State penting:
+
+1. `state_idle`
+
+Catatan: Sesuai PRD anti-speculation rule, tidak boleh memberi garansi return saham/crypto. Selalu sarankan konsultasi.
+
+---
+
+### `screen_settings`
+
+Tujuan screen:
+Pusat kontrol preferensi aplikasi, keamanan, dan manajemen akun pengguna.
+
+ASCII layout:
+
+```text
+.--------------------------------------------------.
+|  <  Pengaturan                                   |
+|                                                  |
+|  .--------------------------------------------.  |
+|  | (Avatar)  Rio Sudrajat                     |  |
+|  |           rio@example.com                  |  |
+|  |           [ Edit Profil ]                  |  |
+|  '--------------------------------------------'  |
+|                                                  |
+|  Preferensi Aplikasi                             |
+|  [🌐] Mata Uang Utama         [ IDR (Rp)  >]     |
+|  [🔔] Notifikasi              [ Atur      >]     |
+|  [🎨] Tema Aplikasi          [ System Default>] |
+|                                                  |
+|  Data & Keamanan                                 |
+|  [🔗] Akun Terhubung (Auto Sync)              >| |
+|  [⬇️] Export Data Transaksi                   >| |
+|  [🔐] Ubah PIN Keamanan                       >| |
+|  [🧬] Login dengan Biometrik         [ Toggle ]  |
+|                                                  |
+|  Bantuan                                         |
+|  [❓] FAQ & Pusat Bantuan                     >| |
+|  [💬] Hubungi Support                         >| |
+|                                                  |
+|  [ Logout ]                                      |
+|  v1.0.0 (Build 42)                               |
+'--------------------------------------------------'
+```
+
+Section breakdown:
+
+1. `section_header_with_back`
+2. `section_profile_summary`
+3. `section_preference_list`
+4. `section_data_security_list`
+5. `section_support_list`
+6. `section_logout_and_version`
+
+Reusable components:
+
+1. `component_list_tile_settings` (icon, title, trailing icon/text)
+2. `component_danger_button` (Logout)
+
 ---
 
 ## 16. Future Mobile Screens Placeholder
@@ -1881,12 +2362,6 @@ Screen di bawah belum memiliki aset final pada folder `ui_halofin`, tetapi kemun
 | --- | --- | --- | --- |
 | `screen_notifications` | `pending design` | Notification System | Notification center, read/unread list, deep link targets |
 | `screen_notification_preferences` | `pending design` | Notification System | Toggle per notification type |
-| `screen_data_export` | `pending design` | Data Export | Export dialog: pilih format, periode, wallet |
-| `screen_ai_draft_review` | `pending design` | AI quick actions | Belum ada visual review draft yang eksplisit |
-| `screen_sync_connection_flow` | `pending design` | Automated account sync | Belum ada desain koneksi provider |
-| `screen_wallet_detail` | `pending design` | Wallet and recommendation | Dibutuhkan jika wallet card membuka detail wallet |
-| `screen_recommendation_detail` | `pending design` | Smart recommendation | Belum ada desain explainable recommendation |
-| `screen_settings` | `pending design` | User preferences | App settings, profile, currency preference, data export trigger |
 
 ## 17. Implementation Notes For Slicing
 

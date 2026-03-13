@@ -305,7 +305,7 @@ flowchart TD
 
 1. Pengguna baru dapat mendaftar dan login dengan alur yang sederhana.
 2. Setelah registrasi, pengguna dipandu untuk membuat wallet pertama dan mengisi saldo awal.
-3. Pengguna dapat memilih kategori pengeluaran yang relevan untuk personalisasi awal.
+3. Pengguna dapat merancang target finansial (Goals) untuk personalisasi awal dan motivasi menabung.
 4. Pengguna dapat melewati langkah opsional tanpa memblokir akses ke fitur utama.
 5. Progress onboarding harus jelas dan tidak membuat user merasa terjebak.
 
@@ -313,7 +313,7 @@ flowchart TD
 
 1. User baru dapat menyelesaikan onboarding dalam waktu kurang dari 3 menit.
 2. Minimal satu wallet terbuat dan saldo awal terisi sebelum user masuk ke dashboard.
-3. Pengguna dapat skip langkah opsional (misal: pilih kategori, set budget awal) dan mengerjakannya nanti.
+3. Pengguna dapat skip langkah opsional (misal: set up goals, set budget awal) dan mengerjakannya nanti.
 4. State onboarding disimpan, sehingga user yang keluar di tengah bisa melanjutkan saat kembali.
 5. Setelah onboarding selesai, user langsung melihat dashboard dengan data awalnya.
 
@@ -361,18 +361,30 @@ flowchart TD
 
 #### Requirements
 
-1. Pengguna dapat menghubungkan akun finansial melalui provider pihak ketiga yang memenuhi syarat bisnis dan kepatuhan.
+1. Pengguna dapat menghubungkan akun finansial (Bank & E-Wallet) melalui provider Open Finance pihak ketiga (kandidat utama: Brick / Ayoconnect).
 2. Transaksi hasil sinkronisasi masuk sebagai DraftTransaction, bukan Transaction final.
 3. Pengguna melihat status koneksi dan status sinkronisasi terbaru.
-4. Sistem membantu kategorisasi awal transaksi yang masuk.
+4. Sistem membantu kategorisasi awal transaksi yang masuk menggunakan AI classification.
+5. Konteks keamanan: HaloFin **tidak pernah** menyimpan kredensial bank/e-wallet pengguna. Proses login dilakukan pada widget secure milik provider. HaloFin hanya menyimpan `access_token` (terenkripsi).
+6. Sifat data: Akses dari provider adalah **Read-Only** (hanya histori transaksi dan saldo). Sistem tidak bisa melakukan instruksi transfer atau pemotongan dana user.
+
+#### Sync Flow (4 Steps)
+
+| Step | Aktor | Proses |
+| --- | --- | --- |
+| 1. Account Linking | User & Provider | User memilih institusi di HaloFin, memilih mode auto-sync atau manual. Jika auto-sync, login via widget provider yg kembalikan `access_token`. |
+| 2. Fetch Transactions | HaloFin Backend | Cron job / manual trigger memanggil API provider menggunakan token untuk menarik mutasi terakhir. |
+| 3. Draft & Categorize | HaloFin Backend | Sistem menyimpan data sebagai `DraftTransaction` dan AI mencoba melakukan klasifikasi kategori berdasarkan nama merchant/deskripsi. |
+| 4. User Review | User | User mendapat notifikasi, merekrut draft (approve, edit kategori/notes, atau reject). Approval mengubah draft menjadi transaksi final. |
 
 #### Acceptance Criteria
 
 1. Setiap transaksi hasil sinkronisasi memiliki status awal `review_needed`.
 2. Pengguna dapat meninjau, mengonfirmasi, mengedit, atau menolak DraftTransaction.
 3. Tidak ada auto-commit transaksi hasil sinkronisasi.
-4. Pengguna dapat mengetahui kapan sinkronisasi terakhir berhasil, gagal, atau membutuhkan re-auth.
+4. Pengguna dapat mengetahui kapan sinkronisasi terakhir berhasil, gagal, atau membutuhkan re-auth (karena token expired).
 5. DraftTransaction yang ditolak tidak memengaruhi saldo final.
+6. Koneksi bisa dicabut kapan saja (revoke access) dari pengaturan app oleh user.
 
 ### 10.6 AI Quick Actions
 
@@ -554,7 +566,7 @@ flowchart LR
     B --> C["Setup wallet pertama"]
     C --> D["Isi saldo awal"]
     D --> E{"Mau personalisasi?"}
-    E -->|Ya| F["Pilih kategori dan set budget awal"]
+    E -->|Ya| F["Set Financial Goals dan budget awal"]
     E -->|Skip| G["Masuk dashboard"]
     F --> G
 ```
@@ -751,7 +763,7 @@ Legend: **R** = Responsible, **A** = Accountable, **C** = Consulted, **I** = Inf
 
 | # | Question | Decision Owner | Deadline | Status |
 | --- | --- | --- | --- | --- |
-| 1 | Provider data finansial mana yang akan dipilih sebagai primary provider untuk auto-sync MVP? | Product Owner + Engineering Lead | Sebelum `mobile_backend_integration` dimulai | **Narrowed** — Kandidat utama: **Brick** dan **Ayoconnect** (aggregator bank + e-wallet). Coverage investasi (saham/crypto) perlu evaluasi terpisah. |
+| 1 | ~~Provider data finansial mana yang akan dipilih sebagai primary provider untuk auto-sync MVP?~~ | Product Owner + Engineering Lead | — | **Resolved** — Menggunakan **Brick** sebagai prioritas (fokus PFM dan e-wallet), dengan **Ayoconnect** sebagai fallback. Akses bersifat *read-only*. |
 | 2 | Payment gateway mana yang akan dipilih sebagai primary provider untuk booking? | Product Owner + Engineering Lead | Sebelum `mobile_backend_integration` dimulai | **Narrowed** — Kandidat: **Midtrans** dan **Xendit**. Pilih berdasarkan dukungan QRIS, transfer bank, dan pricing. |
 | 3 | Berapa nilai threshold Idle Cash per jenis wallet pada launch awal? | Product Owner | Sebelum Recommendation flow di-implement | Open |
 | 4 | Sertifikasi konsultan apa saja yang wajib untuk lolos verifikasi marketplace? Per tipe consultant (financial, tax, government). | Product Owner + Legal | Sebelum `consultant_frontend` dimulai | Open |

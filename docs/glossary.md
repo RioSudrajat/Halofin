@@ -27,6 +27,8 @@ Dokumen ini adalah referensi tunggal untuk semua istilah kanonikal dan definisi 
 | Report | Ringkasan analitik keuangan pengguna berdasarkan periode, kategori, atau wallet. | Reporting & Analytics |
 | Notification | Pesan proaktif dari sistem ke pengguna tentang event finansial yang membutuhkan perhatian. | Notification System |
 | OnboardingFlow | Rangkaian langkah pertama kali saat pengguna baru mendaftar dan menyiapkan akun. | Onboarding |
+| Branch Session | Repositori/inbox khusus di dalam Dashboard untuk memantau chat konsultan, janji temu, dan riwayat pesanan aktif. | Home Dashboard |
+| Sliding Stepper | Komponen header UI animasi horizontal untuk navigasi progress pada flow kompleks (seperti booking flow). | Booking Flow |
 
 ## 3. Canonical Delivery Terms
 
@@ -231,3 +233,4 @@ Dokumen ini adalah referensi tunggal untuk semua istilah kanonikal dan definisi 
 | USD | US Dollar | Active |
 
 Currency lain ditambahkan berdasarkan demand setelah MVP launch.
+
