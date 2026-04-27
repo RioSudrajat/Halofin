@@ -1,16 +1,79 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:intl/intl.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/providers/mock_providers.dart';
+import '../../../../core/models/transaction_model.dart';
 
-class TransactionHistoryScreen extends StatefulWidget {
+class TransactionHistoryScreen extends ConsumerStatefulWidget {
   const TransactionHistoryScreen({super.key});
 
   @override
-  State<TransactionHistoryScreen> createState() => _TransactionHistoryScreenState();
+  ConsumerState<TransactionHistoryScreen> createState() => _TransactionHistoryScreenState();
 }
 
-class _TransactionHistoryScreenState extends State<TransactionHistoryScreen> {
+class _TransactionHistoryScreenState extends ConsumerState<TransactionHistoryScreen> {
+  final formatCurrency = NumberFormat.currency(locale: 'id_ID', symbol: 'Rp ', decimalDigits: 0);
+
+  IconData _getCategoryIcon(String category) {
+    switch (category.toLowerCase()) {
+      case 'makan': case 'makanan & minuman': case 'food & bev': case 'food': return Icons.lunch_dining;
+      case 'transport': return Icons.local_taxi;
+      case 'belanja': case 'shopping': case 'groceries': return Icons.shopping_cart;
+      case 'hiburan': case 'entertainment': return Icons.movie;
+      case 'tagihan': case 'subscription': return Icons.subscriptions;
+      case 'pendidikan': return Icons.school;
+      case 'kesehatan': return Icons.health_and_safety;
+      case 'gaji': case 'income': return Icons.work;
+      case 'transfer': return Icons.swap_horiz;
+      default: return Icons.receipt_long;
+    }
+  }
+
+  Color _getCategoryColor(String category) {
+    switch (category.toLowerCase()) {
+      case 'makan': case 'makanan & minuman': case 'food & bev': case 'food': return Colors.orange;
+      case 'transport': return Colors.teal;
+      case 'belanja': case 'shopping': case 'groceries': return Colors.red;
+      case 'hiburan': case 'entertainment': return Colors.purple;
+      case 'tagihan': case 'subscription': return Colors.blue;
+      case 'gaji': case 'income': return Colors.indigo;
+      case 'transfer': return Colors.blue;
+      default: return Colors.grey;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    final transactions = ref.watch(transactionsProvider);
+
+    double totalIn = 0, totalOut = 0;
+    for (final tx in transactions) {
+      if (tx.type == 'income') {
+        totalIn += tx.amount;
+      } else {
+        totalOut += tx.amount;
+      }
+    }
+
+    // Group by date
+    final Map<String, List<TransactionModel>> grouped = {};
+    final now = DateTime.now();
+    final yesterday = DateTime(now.year, now.month, now.day - 1);
+    for (final tx in transactions) {
+      final txDay = DateTime(tx.date.year, tx.date.month, tx.date.day);
+      final todayDay = DateTime(now.year, now.month, now.day);
+      String key;
+      if (txDay == todayDay) {
+        key = 'Hari Ini, ${DateFormat('d MMM').format(tx.date)}';
+      } else if (txDay == yesterday) {
+        key = 'Kemarin, ${DateFormat('d MMM').format(tx.date)}';
+      } else {
+        key = DateFormat('d MMM yyyy').format(tx.date);
+      }
+      grouped.putIfAbsent(key, () => []).add(tx);
+    }
+
     return Scaffold(
       backgroundColor: AppColors.background,
       appBar: AppBar(
@@ -33,10 +96,7 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen> {
             padding: const EdgeInsets.all(8.0),
             child: Container(
               decoration: BoxDecoration(color: Colors.grey.shade50, shape: BoxShape.circle),
-              child: IconButton(
-                icon: const Icon(Icons.tune, color: Colors.black, size: 20),
-                onPressed: () {},
-              ),
+              child: IconButton(icon: const Icon(Icons.tune, color: Colors.black, size: 20), onPressed: () {}),
             ),
           )
         ],
@@ -44,145 +104,98 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen> {
       body: SingleChildScrollView(
         child: Column(
           children: [
-             // Header Container
-             Container(
-               decoration: const BoxDecoration(
-                 color: Colors.white,
-                 borderRadius: BorderRadius.only(bottomLeft: Radius.circular(24), bottomRight: Radius.circular(24)),
-                 boxShadow: [BoxShadow(color: Color(0x05000000), blurRadius: 10, offset: Offset(0, 4))],
-               ),
-               padding: const EdgeInsets.fromLTRB(20, 16, 20, 20),
-               child: Column(
-                 children: [
-                   // Search Bar
-                   Container(
-                     padding: const EdgeInsets.symmetric(horizontal: 16),
-                     decoration: BoxDecoration(
-                       color: Colors.grey.shade50,
-                       borderRadius: BorderRadius.circular(16),
-                     ),
-                     child: const TextField(
-                       decoration: InputDecoration(
-                         border: InputBorder.none,
-                         hintText: 'Search transactions...',
-                         hintStyle: TextStyle(color: Colors.grey, fontSize: 14),
-                         icon: Icon(Icons.search, color: Colors.grey, size: 20),
-                       ),
-                     ),
-                   ),
-                   const SizedBox(height: 16),
-
-                   // Filter Chips
-                   SingleChildScrollView(
-                     scrollDirection: Axis.horizontal,
-                     child: Row(
-                       children: [
-                         _buildFilterChip('All', isSelected: true, showDropdown: false),
-                         _buildFilterChip('Category'),
-                         _buildFilterChip('Wallet'),
-                         _buildFilterChip('Amount'),
-                         _buildFilterChip('Date'),
-                       ],
-                     ),
-                   ),
-                   const SizedBox(height: 20),
-                   const Divider(height: 1, color: Color(0xFFF3F4F6)),
-                   const SizedBox(height: 16),
-
-                   // Summary
-                   Row(
+            // Header Container
+            Container(
+              decoration: const BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.only(bottomLeft: Radius.circular(24), bottomRight: Radius.circular(24)),
+                boxShadow: [BoxShadow(color: Color(0x05000000), blurRadius: 10, offset: Offset(0, 4))],
+              ),
+              padding: const EdgeInsets.fromLTRB(20, 16, 20, 20),
+              child: Column(
+                children: [
+                  // Summary
+                  Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
-                        children: const [
-                          Text('TOTAL IN', style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: Colors.grey, letterSpacing: 1)),
-                          SizedBox(height: 2),
-                          Text('+Rp 25.500.000', style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.green)),
+                        children: [
+                          const Text('TOTAL IN', style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: Colors.grey, letterSpacing: 1)),
+                          const SizedBox(height: 2),
+                          Text('+${formatCurrency.format(totalIn)}', style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.green)),
                         ],
                       ),
                       Container(width: 1, height: 32, color: Colors.grey.shade200),
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.end,
-                        children: const [
-                          Text('TOTAL OUT', style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: Colors.grey, letterSpacing: 1)),
-                          SizedBox(height: 2),
-                          Text('-Rp 8.240.000', style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.red)),
+                        children: [
+                          const Text('TOTAL OUT', style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: Colors.grey, letterSpacing: 1)),
+                          const SizedBox(height: 2),
+                          Text('-${formatCurrency.format(totalOut)}', style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.red)),
                         ],
                       ),
                     ],
-                   ),
-                 ],
-               ),
-             ),
-             
-             // List area
-             Padding(
-               padding: const EdgeInsets.all(20),
-               child: Column(
-                 crossAxisAlignment: CrossAxisAlignment.stretch,
-                 children: [
-                   _buildDateGroup('Today, Jan 24'),
-                   _buildTransactionCard(icon: Icons.lunch_dining, iconBgColor: Colors.orange.shade50, iconColor: Colors.orange.shade600, title: 'McDonald\'s', time: '12:30 PM', category: 'Food & Bev', amount: '-Rp 85.000', isExpense: true),
-                   _buildTransactionCard(icon: Icons.local_taxi, iconBgColor: Colors.teal.shade50, iconColor: Colors.teal.shade600, title: 'Gojek Ride', time: '08:15 AM', category: 'Transport', amount: '-Rp 24.000', isExpense: true),
-                   _buildTransactionCard(icon: Icons.account_balance_wallet, iconBgColor: Colors.green.shade50, iconColor: Colors.green.shade600, title: 'Top Up E-Wallet', time: '07:45 AM', category: 'Transfer', amount: '-Rp 500.000', isExpense: true),
+                  ),
+                ],
+              ),
+            ),
 
-                   const SizedBox(height: 20),
-                   _buildDateGroup('Yesterday, Jan 23'),
-                   _buildTransactionCard(icon: Icons.work, iconBgColor: Colors.indigo.shade50, iconColor: Colors.indigo.shade600, title: 'Freelance Project A', time: '04:20 PM', category: 'Income', amount: '+Rp 2.500.000', isExpense: false),
-                   _buildTransactionCard(icon: Icons.shopping_cart, iconBgColor: Colors.red.shade50, iconColor: Colors.red.shade600, title: 'Supermarket Weekly', time: '02:10 PM', category: 'Groceries', amount: '-Rp 845.000', isExpense: true),
-                   _buildTransactionCard(icon: Icons.subscriptions, iconBgColor: Colors.purple.shade50, iconColor: Colors.purple.shade600, title: 'Netflix Premium', time: '09:00 AM', category: 'Subscription', amount: '-Rp 186.000', isExpense: true),
-
-                   const SizedBox(height: 20),
-                   _buildDateGroup('Jan 22'),
-                   _buildTransactionCard(icon: Icons.restaurant, iconBgColor: Colors.orange.shade50, iconColor: Colors.orange.shade600, title: 'Dinner with Friends', time: '08:30 PM', category: 'Food', amount: '-Rp 450.000', isExpense: true),
-                 ],
-               ),
-             ),
+            // Transaction list
+            if (transactions.isEmpty)
+              Padding(
+                padding: const EdgeInsets.all(60),
+                child: Column(
+                  children: [
+                    Icon(Icons.receipt_long, size: 64, color: Colors.grey.shade300),
+                    const SizedBox(height: 16),
+                    Text('Belum ada transaksi', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.grey.shade400)),
+                  ],
+                ),
+              )
+            else
+              Padding(
+                padding: const EdgeInsets.all(20),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: grouped.entries.map((entry) {
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(left: 4, bottom: 12),
+                          child: Text(entry.key.toUpperCase(), style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: Colors.grey, letterSpacing: 1)),
+                        ),
+                        ...entry.value.map((tx) {
+                          final isExpense = tx.type == 'expense' || tx.type == 'transfer';
+                          final color = _getCategoryColor(tx.category);
+                          return _buildTransactionCard(
+                            icon: _getCategoryIcon(tx.category),
+                            iconBgColor: color.withValues(alpha: 0.1),
+                            iconColor: color,
+                            title: tx.title,
+                            time: DateFormat('HH:mm').format(tx.date),
+                            category: tx.category,
+                            amount: '${isExpense ? "-" : "+"}${formatCurrency.format(tx.amount)}',
+                            isExpense: isExpense,
+                          );
+                        }),
+                        const SizedBox(height: 20),
+                      ],
+                    );
+                  }).toList(),
+                ),
+              ),
           ],
         ),
       ),
     );
   }
 
-  Widget _buildFilterChip(String label, {bool isSelected = false, bool showDropdown = true}) {
-    return Container(
-      margin: const EdgeInsets.only(right: 8),
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
-      decoration: BoxDecoration(
-        color: isSelected ? Colors.black : Colors.grey.shade100,
-        borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: isSelected ? Colors.black : Colors.grey.shade200),
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Text(label, style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: isSelected ? Colors.white : Colors.grey.shade600)),
-          if (showDropdown) ...[
-            const SizedBox(width: 4),
-            Icon(Icons.expand_more, size: 16, color: Colors.grey.shade600),
-          ]
-        ],
-      ),
-    );
-  }
-
-  Widget _buildDateGroup(String title) {
-    return Padding(
-      padding: const EdgeInsets.only(left: 4, bottom: 12),
-      child: Text(title.toUpperCase(), style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: Colors.grey, letterSpacing: 1)),
-    );
-  }
-
   Widget _buildTransactionCard({
-    required IconData icon,
-    required Color iconBgColor,
-    required Color iconColor,
-    required String title,
-    required String time,
-    required String category,
-    required String amount,
-    required bool isExpense,
+    required IconData icon, required Color iconBgColor, required Color iconColor,
+    required String title, required String time, required String category,
+    required String amount, required bool isExpense,
   }) {
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
@@ -196,13 +209,8 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen> {
       child: Row(
         children: [
           Container(
-            height: 48,
-            width: 48,
-            decoration: BoxDecoration(
-              color: iconBgColor,
-              shape: BoxShape.circle,
-              border: Border.all(color: iconBgColor.withValues(alpha: 0.8)),
-            ),
+            height: 48, width: 48,
+            decoration: BoxDecoration(color: iconBgColor, shape: BoxShape.circle),
             child: Icon(icon, color: iconColor, size: 24),
           ),
           const SizedBox(width: 14),
@@ -215,12 +223,7 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen> {
                 Row(
                   children: [
                     Text(time, style: TextStyle(fontSize: 10, fontWeight: FontWeight.w500, color: Colors.grey.shade500)),
-                    Container(
-                      margin: const EdgeInsets.symmetric(horizontal: 6),
-                      width: 4,
-                      height: 4,
-                      decoration: BoxDecoration(color: Colors.grey.shade300, shape: BoxShape.circle),
-                    ),
+                    Container(margin: const EdgeInsets.symmetric(horizontal: 6), width: 4, height: 4, decoration: BoxDecoration(color: Colors.grey.shade300, shape: BoxShape.circle)),
                     Text(category, style: TextStyle(fontSize: 10, fontWeight: FontWeight.w500, color: Colors.grey.shade500)),
                   ],
                 ),

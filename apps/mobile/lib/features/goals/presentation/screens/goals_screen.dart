@@ -17,7 +17,10 @@ class GoalsScreen extends StatelessWidget {
         title: Row(
           mainAxisSize: MainAxisSize.min,
           children: const [
-            Text('January 2026', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
+            Text(
+              'January 2026',
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+            ),
             SizedBox(width: 4),
             Icon(Icons.expand_more, size: 20, color: Colors.black87),
           ],
@@ -41,11 +44,18 @@ class GoalsScreen extends StatelessWidget {
 
             // Header Section
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: AppSpacing.edgeMargin),
+              padding: const EdgeInsets.symmetric(
+                horizontal: AppSpacing.edgeMargin,
+              ),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text('Your Saving Goals', style: textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold)),
+                  Text(
+                    'Your Saving Goals',
+                    style: textTheme.titleLarge?.copyWith(
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
                   TextButton.icon(
                     onPressed: () {},
                     style: TextButton.styleFrom(
@@ -53,8 +63,18 @@ class GoalsScreen extends StatelessWidget {
                       minimumSize: const Size(0, 0),
                       tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                     ),
-                    icon: const Icon(Icons.add, color: AppColors.primaryDark, size: 18),
-                    label: Text('New Goal', style: textTheme.labelMedium?.copyWith(color: AppColors.primaryDark, fontWeight: FontWeight.bold)),
+                    icon: const Icon(
+                      Icons.add,
+                      color: AppColors.primaryDark,
+                      size: 18,
+                    ),
+                    label: Text(
+                      'New Goal',
+                      style: textTheme.labelMedium?.copyWith(
+                        color: AppColors.primaryDark,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
                   ),
                 ],
               ),
@@ -63,7 +83,9 @@ class GoalsScreen extends StatelessWidget {
 
             // Goals Grid
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: AppSpacing.edgeMargin),
+              padding: const EdgeInsets.symmetric(
+                horizontal: AppSpacing.edgeMargin,
+              ),
               child: GridView.count(
                 shrinkWrap: true,
                 physics: const NeverScrollableScrollPhysics(),
@@ -120,13 +142,16 @@ class GoalsScreen extends StatelessWidget {
                     shortfall: 'Rp 720.000.000',
                     saved: 'Rp 80.000.000',
                   ),
-                  
+
                   // Create New Goal Card
                   Container(
                     decoration: BoxDecoration(
                       color: Colors.grey.shade50,
                       borderRadius: BorderRadius.circular(24),
-                      border: Border.all(color: Colors.grey.shade300, style: BorderStyle.solid), // dashed ideally, but solid is fine for simple compat
+                      border: Border.all(
+                        color: Colors.grey.shade300,
+                        style: BorderStyle.solid,
+                      ), // dashed ideally, but solid is fine for simple compat
                     ),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -137,15 +162,32 @@ class GoalsScreen extends StatelessWidget {
                           decoration: const BoxDecoration(
                             color: Colors.white,
                             shape: BoxShape.circle,
-                            boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 4, offset: Offset(0, 2))],
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black12,
+                                blurRadius: 4,
+                                offset: Offset(0, 2),
+                              ),
+                            ],
                           ),
-                          child: const Icon(Icons.add, color: Colors.grey, size: 28),
+                          child: const Icon(
+                            Icons.add,
+                            color: Colors.grey,
+                            size: 28,
+                          ),
                         ),
                         const SizedBox(height: 12),
-                        const Text('Create New Goal', style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: Colors.grey)),
+                        const Text(
+                          'Create New Goal',
+                          style: TextStyle(
+                            fontSize: 12,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.grey,
+                          ),
+                        ),
                       ],
                     ),
-                  )
+                  ),
                 ],
               ),
             ),
@@ -153,7 +195,9 @@ class GoalsScreen extends StatelessWidget {
 
             // Smart Tip
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: AppSpacing.edgeMargin),
+              padding: const EdgeInsets.symmetric(
+                horizontal: AppSpacing.edgeMargin,
+              ),
               child: Container(
                 padding: const EdgeInsets.all(20),
                 decoration: BoxDecoration(
@@ -167,25 +211,50 @@ class GoalsScreen extends StatelessWidget {
                       height: 40,
                       width: 40,
                       decoration: const BoxDecoration(
-                        color: AppColors.primary,
+                        color: Color(0xFFCCFF00),
                         shape: BoxShape.circle,
                       ),
-                      child: const Icon(Icons.tips_and_updates, color: Colors.black, size: 20),
+                      child: const Icon(
+                        Icons.tips_and_updates,
+                        color: Colors.black,
+                        size: 20,
+                      ),
                     ),
                     const SizedBox(width: 16),
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text('Smart Tip', style: textTheme.titleSmall?.copyWith(fontWeight: FontWeight.bold)),
+                          Text(
+                            'Smart Tip',
+                            style: textTheme.titleSmall?.copyWith(
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
                           const SizedBox(height: 4),
                           RichText(
                             text: TextSpan(
-                              style: TextStyle(fontSize: 12, color: Colors.grey.shade600, height: 1.5),
+                              style: TextStyle(
+                                fontSize: 12,
+                                color: Colors.grey.shade600,
+                                height: 1.5,
+                              ),
                               children: [
-                                const TextSpan(text: 'Based on your spending, you can save an extra '),
-                                const TextSpan(text: 'Rp 500.000', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.black)),
-                                const TextSpan(text: ' this month by cutting down on coffee expenses.'),
+                                const TextSpan(
+                                  text:
+                                      'Based on your spending, you can save an extra ',
+                                ),
+                                const TextSpan(
+                                  text: 'Rp 500.000',
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.black,
+                                  ),
+                                ),
+                                const TextSpan(
+                                  text:
+                                      ' this month by cutting down on coffee expenses.',
+                                ),
                               ],
                             ),
                           ),
@@ -254,7 +323,13 @@ class GoalsScreen extends StatelessWidget {
                           children: [
                             Icon(icon, size: 24, color: Colors.grey.shade800),
                             const SizedBox(height: 2),
-                            Text('${(progress * 100).toInt()}%', style: const TextStyle(fontSize: 10, fontWeight: FontWeight.bold)),
+                            Text(
+                              '${(progress * 100).toInt()}%',
+                              style: const TextStyle(
+                                fontSize: 10,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
                           ],
                         ),
                       ),
@@ -262,13 +337,34 @@ class GoalsScreen extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 12),
-                Text(name, style: const TextStyle(fontSize: 13, fontWeight: FontWeight.bold), maxLines: 1, overflow: TextOverflow.ellipsis),
+                Text(
+                  name,
+                  style: const TextStyle(
+                    fontSize: 13,
+                    fontWeight: FontWeight.bold,
+                  ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
                 const SizedBox(height: 4),
-                Text('Target: $target', style: TextStyle(fontSize: 9, color: Colors.grey.shade500)),
-                Text('Kurang $shortfall', style: const TextStyle(fontSize: 9, fontWeight: FontWeight.bold, color: Colors.red)),
+                Text(
+                  'Target: $target',
+                  style: TextStyle(fontSize: 9, color: Colors.grey.shade500),
+                ),
+                Text(
+                  'Kurang $shortfall',
+                  style: const TextStyle(
+                    fontSize: 9,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.red,
+                  ),
+                ),
                 const Spacer(),
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 10,
+                    vertical: 6,
+                  ),
                   decoration: BoxDecoration(
                     color: Colors.grey.shade50,
                     borderRadius: BorderRadius.circular(8),
@@ -276,8 +372,21 @@ class GoalsScreen extends StatelessWidget {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text('Saved', style: TextStyle(fontSize: 9, color: Colors.grey.shade400, fontWeight: FontWeight.w500)),
-                      Text(saved, style: const TextStyle(fontSize: 10, fontWeight: FontWeight.bold)),
+                      Text(
+                        'Saved',
+                        style: TextStyle(
+                          fontSize: 9,
+                          color: Colors.grey.shade400,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                      Text(
+                        saved,
+                        style: const TextStyle(
+                          fontSize: 10,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
                     ],
                   ),
                 ),
@@ -289,8 +398,18 @@ class GoalsScreen extends StatelessWidget {
             left: 12,
             child: Container(
               padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-              decoration: BoxDecoration(color: tagColor, borderRadius: BorderRadius.circular(12)),
-              child: Text(timeLeft, style: TextStyle(fontSize: 9, fontWeight: FontWeight.bold, color: tagTextColor)),
+              decoration: BoxDecoration(
+                color: tagColor,
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Text(
+                timeLeft,
+                style: TextStyle(
+                  fontSize: 9,
+                  fontWeight: FontWeight.bold,
+                  color: tagTextColor,
+                ),
+              ),
             ),
           ),
           const Positioned(

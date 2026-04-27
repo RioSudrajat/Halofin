@@ -34,7 +34,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     final textTheme = Theme.of(context).textTheme;
     final user = ref.watch(userProvider);
     final transactions = ref.watch(transactionsProvider);
+    final wallets = ref.watch(walletsProvider);
     final currencyFormat = NumberFormat.currency(locale: 'id_ID', symbol: 'Rp ', decimalDigits: 0);
+    final totalBalance = wallets.fold<double>(0, (sum, w) => sum + w.balance);
 
     return Scaffold(
       backgroundColor: AppColors.surface,
@@ -216,7 +218,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                                       const Text('Rp ', style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600, color: Colors.black87)),
                                       Expanded(
                                         child: Text(
-                                          _obscureBalance ? '••••••••' : currencyFormat.format(user.totalBalance).replaceAll('Rp ', ''),
+                                          _obscureBalance ? '••••••••' : currencyFormat.format(totalBalance).replaceAll('Rp ', ''),
                                           style: const TextStyle(fontSize: 22, fontWeight: FontWeight.w900, color: Colors.black, height: 1),
                                           overflow: TextOverflow.ellipsis,
                                         ),
@@ -251,12 +253,21 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                                 scrollDirection: Axis.horizontal,
                                 child: Row(
                                   children: [
-                                    _buildWalletPill('BCA', 'Rp 150.000.000', onTap: () => context.push('/wallet/bca')),
-                                    const SizedBox(width: 6),
-                                    _buildWalletPill('BNI', 'Rp 5.000.000', onTap: () => context.push('/wallet/bni')),
-                                    const SizedBox(width: 6),
-                                    _buildWalletPill('Cash', 'Rp 500.000', icon: Icons.shopping_bag, onTap: () => context.push('/wallet/cash')),
-                                    const SizedBox(width: 6),
+                                    ...wallets.take(3).map((w) {
+                                      IconData wIcon = Icons.account_balance;
+                                      if (w.type == 'E-Wallet') wIcon = Icons.account_balance_wallet;
+                                      else if (w.type == 'Cash') wIcon = Icons.shopping_bag;
+                                      else if (w.type == 'Crypto' || w.type == 'Stock' || w.type == 'Mutual Fund') wIcon = Icons.show_chart;
+                                      return Padding(
+                                        padding: const EdgeInsets.only(right: 6),
+                                        child: _buildWalletPill(
+                                          w.name.length > 10 ? w.name.substring(0, 10) : w.name,
+                                          currencyFormat.format(w.balance),
+                                          icon: wIcon,
+                                          onTap: () => context.push('/wallet/${w.id}'),
+                                        ),
+                                      );
+                                    }),
                                     // Add wallet button
                                     GestureDetector(
                                       onTap: () => context.push('/wallet/add'),

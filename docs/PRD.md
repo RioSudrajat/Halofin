@@ -13,6 +13,7 @@
 
 | Date       | Change                                                                                                                         |
 | ---------- | ------------------------------------------------------------------------------------------------------------------------------ |
+| 2026-04-27 | Refactored Wallet & Transaction to dynamic Riverpod state. Added real-time asset simulation, automated dividend tracking, inline transaction entry with swipe-to-finish persistence, and bank-style success feedback. |
 | 2026-03-11 | Added 5 new core features (Reporting, Notifications, Onboarding, Data Export, Multi-Currency). Added MoSCoW prioritization, persona cards, RACI matrix, product risk register, module dependency graph, quantitative metric targets, and open question deadlines. |
 | 2026-03-09 | Clarified current mobile frontend cluster for Wave 1 without introducing implementation detail.                                |
 | 2026-03-09 | Added application inventory, delivery phases, mobile-first frontend-first strategy, and delivery-level acceptance criteria.    |
@@ -285,19 +286,24 @@ flowchart TD
 
 #### Requirements
 
-1. Pengguna dapat membuat transaksi pemasukan, pengeluaran, dan transfer secara manual.
-2. Pengguna dapat mengelola wallet dan saldo awal.
-3. Pengguna dapat menetapkan budgeting per kategori.
-4. Pengguna dapat membuat goals tabungan.
-5. Pengguna dapat membuat pengingat tagihan rutin.
+1. Pengguna dapat membuat transaksi pemasukan, pengeluaran, dan transfer secara manual (menggunakan alur *inline form* tanpa banyak modal).
+2. Konfirmasi penyimpanan transaksi menggunakan mekanisme *swipe-to-finish* yang aman, diikuti oleh halaman sukses bergaya perbankan (*bank-style success feedback*).
+3. Pengguna dapat mengelola wallet (Bank, E-Wallet, Investasi) dan saldo awal.
+4. Sistem dapat menyimulasikan nilai aset volatil (Saham, Crypto) secara *real-time* dari sisi frontend untuk keperluan representasi portofolio.
+5. Sistem dapat mengelola dan mengakumulasi dividen otomatis tepat pada *dividend drop date* yang telah ditentukan oleh pengguna.
+6. Pengguna dapat menetapkan budgeting per kategori.
+7. Pengguna dapat membuat goals tabungan.
+8. Pengguna dapat membuat pengingat tagihan rutin.
 
 #### Acceptance Criteria
 
-1. Pengguna dapat menyimpan transaksi manual dengan minimal kategori, nominal, tanggal, dan wallet.
-2. Perubahan transaksi final memperbarui saldo wallet terkait.
+1. Pengguna dapat menyimpan transaksi manual dengan minimal kategori, nominal, tanggal, dan wallet. Proses simpan divalidasi dengan gestur *swipe-to-finish* untuk menghindari submit tidak disengaja.
+2. Perubahan transaksi final secara otomatis memperbarui saldo wallet terkait di state *Riverpod* frontend.
 3. Transfer antar-wallet tercatat sebagai perpindahan nilai, bukan pengeluaran ganda.
-4. Pengguna dapat melihat sisa budget per kategori dalam periode aktif.
-5. Pengingat tagihan dapat dibuat, diubah, dan dinonaktifkan tanpa menghapus histori transaksi.
+4. Aset yang memiliki return dinamis (Crypto/Saham) disimulasikan nilainya setiap interval tertentu jika aplikasi aktif, untuk memberikan kesan *living dashboard*.
+5. Aset yang memiliki target dividen akan bertambah otomatis ke saldo pada *drop date* yang diset di frontend, tanpa memerlukan input transaksi manual baru.
+6. Pengguna dapat melihat sisa budget per kategori dalam periode aktif.
+7. Pengingat tagihan dapat dibuat, diubah, dan dinonaktifkan tanpa menghapus histori transaksi.
 
 ### 10.2 Onboarding Flow
 

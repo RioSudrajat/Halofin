@@ -1,17 +1,28 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:fl_chart/fl_chart.dart';
+import 'package:intl/intl.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/providers/mock_providers.dart';
+import '../../../../core/models/transaction_model.dart';
 
-class WalletDetailScreen extends StatelessWidget {
+class WalletDetailScreen extends ConsumerWidget {
   final String walletId;
   const WalletDetailScreen({super.key, required this.walletId});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final textTheme = Theme.of(context).textTheme;
-    // Mock data based on walletId
-    final walletData = _getWalletData(walletId);
+    final wallets = ref.watch(walletsProvider);
+    
+    // Find wallet by id, or fallback to first if not found (or return error)
+    final wallet = wallets.firstWhere(
+      (w) => w.id == walletId, 
+      orElse: () => wallets.isNotEmpty ? wallets.first : wallets.first // Temporary fallback
+    );
+
+    final formatCurrency = NumberFormat.currency(locale: 'id_ID', symbol: 'Rp ', decimalDigits: 0);
 
     return Scaffold(
       backgroundColor: AppColors.background,
@@ -19,6 +30,30 @@ class WalletDetailScreen extends StatelessWidget {
         leading: IconButton(icon: const Icon(Icons.arrow_back), onPressed: () => context.pop()),
         title: const Text('Detail Wallet', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
         actions: [
+          IconButton(
+            onPressed: () {
+              showDialog(
+                context: context,
+                builder: (ctx) => AlertDialog(
+                  title: const Text('Hapus Wallet?'),
+                  content: Text('Yakin mau hapus ${wallet.name}? Aksi ini tidak bisa dibatalkan.'),
+                  actions: [
+                    TextButton(onPressed: () => Navigator.pop(ctx), child: const Text('Batal')),
+                    TextButton(
+                      onPressed: () {
+                        ref.read(walletsProvider.notifier).deleteWallet(wallet.id);
+                        Navigator.pop(ctx);
+                        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Wallet berhasil dihapus')));
+                        context.pop();
+                      },
+                      child: const Text('Hapus', style: TextStyle(color: Colors.red)),
+                    ),
+                  ],
+                ),
+              );
+            },
+            icon: const Icon(Icons.delete_outline, color: Colors.red),
+          ),
           TextButton.icon(
             onPressed: () {},
             icon: const Icon(Icons.settings, size: 18),
@@ -63,8 +98,8 @@ class WalletDetailScreen extends StatelessWidget {
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(walletData['name'] as String, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: Colors.white)),
-                          if (walletData['isAutoSync'] == true)
+                          Text(wallet.name, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: Colors.white)),
+                          if (wallet.isAutoSync)
                             Container(
                               margin: const EdgeInsets.only(top: 4),
                               padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
@@ -78,8 +113,31 @@ class WalletDetailScreen extends StatelessWidget {
                   const SizedBox(height: 20),
                   const Text('Saldo Saat Ini', style: TextStyle(fontSize: 12, color: Colors.white60)),
                   const SizedBox(height: 4),
-                  Text(walletData['balance'] as String, style: const TextStyle(fontSize: 28, fontWeight: FontWeight.w900, color: Colors.white, letterSpacing: -0.5)),
-                  if (walletData['isAutoSync'] == true) ...[
+                  Text(formatCurrency.format(wallet.balance), style: const TextStyle(fontSize: 28, fontWeight: FontWeight.w900, color: Colors.white, letterSpacing: -0.5)),
+                  
+                  if (wallet.returnPercentage != null) ...[
+                    const SizedBox(height: 12),
+                    Row(
+                      children: [
+                        Icon(wallet.returnPercentage! >= 0 ? Icons.trending_up : Icons.trending_down, size: 14, color: wallet.returnPercentage! >= 0 ? Colors.greenAccent : Colors.redAccent),
+                        const SizedBox(width: 6),
+                        Text('Return: ${wallet.returnPercentage!.toStringAsFixed(2)}%', style: TextStyle(fontSize: 12, color: wallet.returnPercentage! >= 0 ? Colors.greenAccent : Colors.redAccent)),
+                      ],
+                    ),
+                  ],
+
+                  if (wallet.dividendDropDate != null) ...[
+                    const SizedBox(height: 8),
+                    Row(
+                      children: [
+                        const Icon(Icons.calendar_today, size: 14, color: Colors.white70),
+                        const SizedBox(width: 6),
+                        Text('Dividen: ${wallet.dividendDropDate!.day}/${wallet.dividendDropDate!.month}/${wallet.dividendDropDate!.year}', style: const TextStyle(fontSize: 12, color: Colors.white70)),
+                      ],
+                    ),
+                  ],
+
+                  if (wallet.isAutoSync) ...[
                     const SizedBox(height: 16),
                     Row(
                       children: [
@@ -167,7 +225,7 @@ class WalletDetailScreen extends StatelessWidget {
             ),
             const SizedBox(height: 24),
 
-            // Recent Mutations
+            // Recent Mutations — dynamic from transactions
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -179,10 +237,35 @@ class WalletDetailScreen extends StatelessWidget {
               ],
             ),
             const SizedBox(height: 8),
-            _buildMutationItem(icon: Icons.fastfood, iconColor: Colors.orange, iconBg: Colors.orange.shade50, title: "McDonald's", subtitle: 'Hari ini, 19:30', amount: '-Rp 125.000', isExpense: true),
-            _buildMutationItem(icon: Icons.work, iconColor: Colors.blue, iconBg: Colors.blue.shade50, title: 'Gaji PT ABC', subtitle: '25 Feb 2026', amount: '+Rp 10.000.000', isExpense: false),
-            _buildMutationItem(icon: Icons.shopping_bag, iconColor: Colors.pink, iconBg: Colors.pink.shade50, title: 'Tokopedia', subtitle: '24 Feb 2026', amount: '-Rp 350.000', isExpense: true),
-            _buildMutationItem(icon: Icons.directions_car, iconColor: Colors.green, iconBg: Colors.green.shade50, title: 'Grab Car', subtitle: '23 Feb 2026', amount: '-Rp 45.000', isExpense: true),
+            Builder(
+              builder: (context) {
+                final allTx = ref.watch(transactionsProvider);
+                final walletTx = allTx.where((tx) => tx.walletId == walletId || tx.targetWalletId == walletId).take(5).toList();
+                if (walletTx.isEmpty) {
+                  return Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 32),
+                    child: Center(
+                      child: Text('Belum ada mutasi', style: TextStyle(color: Colors.grey.shade400, fontWeight: FontWeight.w600)),
+                    ),
+                  );
+                }
+                return Column(
+                  children: walletTx.map((tx) {
+                    final isExpense = tx.type == 'expense' || (tx.type == 'transfer' && tx.walletId == walletId);
+                    final color = isExpense ? Colors.red : Colors.green;
+                    return _buildMutationItem(
+                      icon: tx.type == 'transfer' ? Icons.swap_horiz : (isExpense ? Icons.arrow_upward : Icons.arrow_downward),
+                      iconColor: color,
+                      iconBg: color.withValues(alpha: 0.1),
+                      title: tx.title,
+                      subtitle: '${tx.date.day}/${tx.date.month}/${tx.date.year}',
+                      amount: '${isExpense ? "-" : "+"}${formatCurrency.format(tx.amount)}',
+                      isExpense: isExpense,
+                    );
+                  }).toList(),
+                );
+              },
+            ),
             const SizedBox(height: 100),
           ],
         ),
@@ -222,18 +305,5 @@ class WalletDetailScreen extends StatelessWidget {
         ],
       ),
     );
-  }
-
-  Map<String, dynamic> _getWalletData(String id) {
-    switch (id) {
-      case 'bca':
-        return {'name': 'BCA', 'balance': 'Rp 150.000.000', 'isAutoSync': true};
-      case 'bni':
-        return {'name': 'BNI', 'balance': 'Rp 5.000.000', 'isAutoSync': true};
-      case 'cash':
-        return {'name': 'Cash', 'balance': 'Rp 500.000', 'isAutoSync': false};
-      default:
-        return {'name': 'Wallet', 'balance': 'Rp 0', 'isAutoSync': false};
-    }
   }
 }

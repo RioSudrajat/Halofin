@@ -18,6 +18,9 @@ import '../features/consult/presentation/screens/consult_list_screen.dart';
 import '../features/consult/presentation/screens/consult_detail_screen.dart';
 import '../features/consult/presentation/screens/booking_service_screen.dart';
 import '../features/consult/presentation/screens/booking_time_screen.dart';
+import '../features/goals/presentation/screens/add_edit_goal_screen.dart';
+import '../features/budget/presentation/screens/add_edit_budget_screen.dart';
+import '../features/bills/presentation/screens/add_edit_bill_screen.dart';
 import '../features/consult/presentation/screens/booking_pre_consultation_screen.dart';
 import '../features/consult/presentation/screens/booking_payment_screen.dart';
 import '../features/transaction/presentation/screens/transaction_entry_screen.dart';
@@ -26,6 +29,7 @@ import '../features/transaction/presentation/screens/ai_draft_review_screen.dart
 import '../features/profile/presentation/screens/profile_screen.dart';
 import '../features/report/presentation/screens/report_dashboard_screen.dart';
 import '../features/session/presentation/screens/branch_session_screen.dart';
+import '../features/transaction/presentation/screens/transaction_success_screen.dart';
 
 // Keys for each navigator branch
 final _rootNavigatorKey = GlobalKey<NavigatorState>();
@@ -119,6 +123,36 @@ final goRouterProvider = Provider<GoRouter>((ref) {
 
       // --- Routes shown ABOVE the shell (full-screen, no bottom nav) ---
       GoRoute(
+        path: '/goal/add',
+        parentNavigatorKey: _rootNavigatorKey,
+        builder: (context, state) => const AddEditGoalScreen(),
+      ),
+      GoRoute(
+        path: '/goal/edit/:id',
+        parentNavigatorKey: _rootNavigatorKey,
+        builder: (context, state) => AddEditGoalScreen(goalId: state.pathParameters['id']),
+      ),
+      GoRoute(
+        path: '/budget/add',
+        parentNavigatorKey: _rootNavigatorKey,
+        builder: (context, state) => const AddEditBudgetScreen(),
+      ),
+      GoRoute(
+        path: '/budget/edit/:id',
+        parentNavigatorKey: _rootNavigatorKey,
+        builder: (context, state) => AddEditBudgetScreen(budgetId: state.pathParameters['id']),
+      ),
+      GoRoute(
+        path: '/bill/add',
+        parentNavigatorKey: _rootNavigatorKey,
+        builder: (context, state) => const AddEditBillScreen(),
+      ),
+      GoRoute(
+        path: '/bill/edit/:id',
+        parentNavigatorKey: _rootNavigatorKey,
+        builder: (context, state) => AddEditBillScreen(billId: state.pathParameters['id']),
+      ),
+      GoRoute(
         path: '/consult/:id',
         parentNavigatorKey: _rootNavigatorKey,
         builder: (context, state) => ConsultDetailScreen(consultantId: state.pathParameters['id']!),
@@ -157,6 +191,11 @@ final goRouterProvider = Provider<GoRouter>((ref) {
         path: '/transaction/entry',
         parentNavigatorKey: _rootNavigatorKey,
         builder: (context, state) => const TransactionEntryScreen(),
+      ),
+      GoRoute(
+        path: '/transaction/success',
+        parentNavigatorKey: _rootNavigatorKey,
+        builder: (context, state) => const TransactionSuccessScreen(),
       ),
       GoRoute(
         path: '/transaction/history',

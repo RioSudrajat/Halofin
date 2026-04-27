@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../core/theme/app_colors.dart';
+import 'manual_wallet_entry_screen.dart';
 
 class AddWalletInstitutionScreen extends StatefulWidget {
   const AddWalletInstitutionScreen({super.key});
@@ -13,25 +14,26 @@ class _AddWalletInstitutionScreenState extends State<AddWalletInstitutionScreen>
   String _searchQuery = '';
 
   final _banks = [
-    _Institution('BCA', Icons.account_balance, true),
-    _Institution('Mandiri', Icons.account_balance, true),
-    _Institution('BRI', Icons.account_balance, true),
-    _Institution('Bank Syariah Indonesia', Icons.account_balance, false),
-    _Institution('BNI', Icons.account_balance, true),
+    _Institution('BCA', 'Bank', Icons.account_balance, true),
+    _Institution('Mandiri', 'Bank', Icons.account_balance, true),
+    _Institution('BRI', 'Bank', Icons.account_balance, true),
+    _Institution('Bank Syariah Indonesia', 'Bank', Icons.account_balance, false),
+    _Institution('BNI', 'Bank', Icons.account_balance, true),
   ];
 
   final _ewallets = [
-    _Institution('GoPay', Icons.account_balance_wallet, true),
-    _Institution('OVO', Icons.account_balance_wallet, true),
-    _Institution('DANA', Icons.account_balance_wallet, true),
-    _Institution('ShopeePay', Icons.account_balance_wallet, false),
+    _Institution('GoPay', 'E-Wallet', Icons.account_balance_wallet, true),
+    _Institution('OVO', 'E-Wallet', Icons.account_balance_wallet, true),
+    _Institution('DANA', 'E-Wallet', Icons.account_balance_wallet, true),
+    _Institution('ShopeePay', 'E-Wallet', Icons.account_balance_wallet, false),
   ];
 
   final _investments = [
-    _Institution('Stockbit', Icons.show_chart, false),
-    _Institution('Pintu Crypto', Icons.currency_bitcoin, false),
-    _Institution('Emas Fisik/Digital', Icons.diamond, false),
-    _Institution('Cash / Dompet Tunai', Icons.wallet, false),
+    _Institution('Stockbit', 'Stock', Icons.show_chart, false),
+    _Institution('Pintu Crypto', 'Crypto', Icons.currency_bitcoin, false),
+    _Institution('Emas Fisik/Digital', 'Bond', Icons.diamond, false),
+    _Institution('Cash / Dompet Tunai', 'Cash', Icons.wallet, false),
+    _Institution('Bibit Reksadana', 'Mutual Fund', Icons.pie_chart, false),
   ];
 
   @override
@@ -135,13 +137,18 @@ class _AddWalletInstitutionScreenState extends State<AddWalletInstitutionScreen>
                       ),
                       onTap: () {
                         if (inst.supportsAutoSync) {
-                          _showSyncChoiceBottomSheet(context, inst.name);
+                          _showSyncChoiceBottomSheet(context, inst);
                         } else {
-                          // Navigate directly to manual input (future screen)
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(content: Text('${inst.name} ditambahkan secara manual')),
+                          // Navigate directly to manual input
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => ManualWalletEntryScreen(
+                                institutionName: inst.name,
+                                institutionType: inst.type,
+                              ),
+                            ),
                           );
-                          context.pop();
                         }
                       },
                     ),
@@ -156,7 +163,7 @@ class _AddWalletInstitutionScreenState extends State<AddWalletInstitutionScreen>
     );
   }
 
-  void _showSyncChoiceBottomSheet(BuildContext context, String institutionName) {
+  void _showSyncChoiceBottomSheet(BuildContext context, _Institution institution) {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -176,16 +183,16 @@ class _AddWalletInstitutionScreenState extends State<AddWalletInstitutionScreen>
               child: Container(width: 40, height: 4, decoration: BoxDecoration(color: Colors.grey.shade300, borderRadius: BorderRadius.circular(2))),
             ),
             const SizedBox(height: 20),
-            Text('Pilih Metode Sinkronisasi', style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
+            const Text('Pilih Metode Sinkronisasi', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
             const SizedBox(height: 8),
-            Text('Kamu mau input data $institutionName kamu secara otomatis atau manual?', style: TextStyle(fontSize: 13, color: Colors.grey.shade600)),
+            Text('Kamu mau input data ${institution.name} kamu secara otomatis atau manual?', style: TextStyle(fontSize: 13, color: Colors.grey.shade600)),
             const SizedBox(height: 20),
 
             // Auto option
             GestureDetector(
               onTap: () {
                 Navigator.pop(ctx);
-                ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Menghubungkan $institutionName otomatis...')));
+                ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Menghubungkan ${institution.name} otomatis...')));
                 context.pop();
               },
               child: Container(
@@ -229,8 +236,15 @@ class _AddWalletInstitutionScreenState extends State<AddWalletInstitutionScreen>
             GestureDetector(
               onTap: () {
                 Navigator.pop(ctx);
-                ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('$institutionName ditambahkan secara manual')));
-                context.pop();
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => ManualWalletEntryScreen(
+                      institutionName: institution.name,
+                      institutionType: institution.type,
+                    ),
+                  ),
+                );
               },
               child: Container(
                 width: double.infinity,
@@ -282,7 +296,8 @@ class _AddWalletInstitutionScreenState extends State<AddWalletInstitutionScreen>
 
 class _Institution {
   final String name;
+  final String type;
   final IconData icon;
   final bool supportsAutoSync;
-  const _Institution(this.name, this.icon, this.supportsAutoSync);
+  const _Institution(this.name, this.type, this.icon, this.supportsAutoSync);
 }
