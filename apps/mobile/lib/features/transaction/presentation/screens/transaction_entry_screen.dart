@@ -9,13 +9,25 @@ import '../../../../core/providers/mock_providers.dart';
 import '../../../budget/presentation/providers/finance_providers.dart';
 
 class TransactionEntryScreen extends ConsumerStatefulWidget {
-  const TransactionEntryScreen({super.key});
+  final String? prefilledType;
+  final String? prefilledTargetGoalId;
+  final String? prefilledSourceWalletId;
+  final String? prefilledTargetWalletId;
+
+  const TransactionEntryScreen({
+    super.key,
+    this.prefilledType,
+    this.prefilledTargetGoalId,
+    this.prefilledSourceWalletId,
+    this.prefilledTargetWalletId,
+  });
 
   @override
   ConsumerState<TransactionEntryScreen> createState() => _TransactionEntryScreenState();
 }
 
-class _TransactionEntryScreenState extends ConsumerState<TransactionEntryScreen> {
+class _TransactionEntryScreenState extends ConsumerState<TransactionEntryScreen>
+    with SingleTickerProviderStateMixin {
   String _type = 'Pengeluaran';
   DateTime _selectedDate = DateTime.now();
   String _dateString = 'Hari Ini';
@@ -27,16 +39,50 @@ class _TransactionEntryScreenState extends ConsumerState<TransactionEntryScreen>
   final _amountFocusNode = FocusNode();
   final _notesController = TextEditingController();
 
+  // Swipe animation state
+  double _dragOffset = 0;
+  late AnimationController _snapBackController;
+  late Animation<double> _snapBackAnimation;
+
   final _categories = [
     'Makanan & minuman', 'Transport', 'Belanja', 'Hiburan',
     'Tagihan', 'Pendidikan', 'Kesehatan', 'Lainnya',
   ];
 
   @override
+  void initState() {
+    super.initState();
+    _snapBackController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 300),
+    );
+    _snapBackAnimation = Tween<double>(begin: 0, end: 0).animate(
+      CurvedAnimation(parent: _snapBackController, curve: Curves.easeOut),
+    )..addListener(() {
+      setState(() => _dragOffset = _snapBackAnimation.value);
+    });
+
+    // Apply pre-filled state from navigation
+    if (widget.prefilledType != null) {
+      _type = widget.prefilledType!;
+    }
+    if (widget.prefilledTargetGoalId != null) {
+      _targetGoalId = widget.prefilledTargetGoalId;
+    }
+    if (widget.prefilledSourceWalletId != null) {
+      _selectedWalletId = widget.prefilledSourceWalletId;
+    }
+    if (widget.prefilledTargetWalletId != null) {
+      _targetWalletId = widget.prefilledTargetWalletId;
+    }
+  }
+
+  @override
   void dispose() {
     _amountController.dispose();
     _amountFocusNode.dispose();
     _notesController.dispose();
+    _snapBackController.dispose();
     super.dispose();
   }
 
@@ -99,7 +145,20 @@ class _TransactionEntryScreenState extends ConsumerState<TransactionEntryScreen>
     );
 
     ref.read(transactionsProvider.notifier).addTransaction(tx);
-    context.go('/transaction/success');
+
+    // Determine return path for success screen
+    String? goalIdForReturn = _targetGoalId;
+    // For reverse transfers, extract goal ID from source
+    if (goalIdForReturn == null && _selectedWalletId != null && _selectedWalletId!.startsWith('goal:')) {
+      final parts = _selectedWalletId!.split(':');
+      if (parts.length >= 2) goalIdForReturn = parts[1];
+    }
+
+    if (goalIdForReturn != null) {
+      context.go('/transaction/success', extra: {'returnTo': '/goal/$goalIdForReturn'});
+    } else {
+      context.go('/transaction/success');
+    }
   }
 
   @override
@@ -325,14 +384,36 @@ class _TransactionEntryScreenState extends ConsumerState<TransactionEntryScreen>
             ),
             const SizedBox(height: 16),
 
-            // Bottom form sheet — swipe-to-finish HERE
+            // Bottom form sheet — swipe-to-finish with drag animation
             GestureDetector(
+              onVerticalDragUpdate: (details) {
+                setState(() {
+                  // Only allow dragging upward (negative offset)
+                  _dragOffset = (_dragOffset + details.delta.dy).clamp(-400.0, 0.0);
+                });
+              },
               onVerticalDragEnd: (details) {
-                if (details.primaryVelocity != null && details.primaryVelocity! < -300) {
-                  _saveTransaction();
+                if (_dragOffset < -120 || (details.primaryVelocity != null && details.primaryVelocity! < -300)) {
+                  // Animate out then save
+                  _snapBackAnimation = Tween<double>(begin: _dragOffset, end: -500.0).animate(
+                    CurvedAnimation(parent: _snapBackController, curve: Curves.easeIn),
+                  );
+                  _snapBackController.forward(from: 0).then((_) {
+                    _saveTransaction();
+                  });
+                } else {
+                  // Snap back
+                  _snapBackAnimation = Tween<double>(begin: _dragOffset, end: 0.0).animate(
+                    CurvedAnimation(parent: _snapBackController, curve: Curves.elasticOut),
+                  );
+                  _snapBackController.forward(from: 0);
                 }
               },
-              child: Container(
+              child: Transform.translate(
+                offset: Offset(0, _dragOffset),
+                child: Opacity(
+                  opacity: (1.0 + _dragOffset / 500).clamp(0.3, 1.0),
+                  child: Container(
                 decoration: const BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
@@ -537,6 +618,8 @@ class _TransactionEntryScreenState extends ConsumerState<TransactionEntryScreen>
                   ],
                 ),
               ),
+              ),  // Opacity
+              ),  // Transform.translate
             ),
           ],
         ),

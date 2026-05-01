@@ -373,7 +373,7 @@ class _GoalsContent extends ConsumerWidget {
                 final timeLeftStr = isComplete ? 'Complete' : (daysLeft > 30 ? '${daysLeft ~/ 30} months left' : '$daysLeft days left');
 
                 return GestureDetector(
-                  onTap: () => context.push('/goal/edit/${goal.id}'),
+                  onTap: () => context.push('/goal/${goal.id}'),
                   child: _buildGoalCard(
                     context, 
                     name: goal.name, 

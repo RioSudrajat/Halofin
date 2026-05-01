@@ -234,6 +234,24 @@ class GoalsNotifier extends Notifier<List<GoalModel>> {
       return goal;
     }).toList();
   }
+
+  /// Remove savings from a goal, returning funds to a specific wallet
+  void removeSavings(String goalId, String walletId, double amount) {
+    state = state.map((goal) {
+      if (goal.id == goalId) {
+        final newContributions = Map<String, double>.from(goal.contributions);
+        final current = newContributions[walletId] ?? 0;
+        final actualRemove = amount.clamp(0, current);
+        newContributions[walletId] = current - actualRemove;
+        if (newContributions[walletId]! <= 0) newContributions.remove(walletId);
+        return goal.copyWith(
+          savedAmount: (goal.savedAmount - actualRemove).clamp(0, double.infinity),
+          contributions: newContributions,
+        );
+      }
+      return goal;
+    }).toList();
+  }
 }
 
 class BudgetsNotifier extends Notifier<List<BudgetCategoryModel>> {

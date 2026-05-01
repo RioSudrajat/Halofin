@@ -19,6 +19,7 @@ import '../features/consult/presentation/screens/consult_detail_screen.dart';
 import '../features/consult/presentation/screens/booking_service_screen.dart';
 import '../features/consult/presentation/screens/booking_time_screen.dart';
 import '../features/goals/presentation/screens/add_edit_goal_screen.dart';
+import '../features/goals/presentation/screens/goal_detail_screen.dart';
 import '../features/budget/presentation/screens/add_edit_budget_screen.dart';
 import '../features/bills/presentation/screens/add_edit_bill_screen.dart';
 import '../features/consult/presentation/screens/booking_pre_consultation_screen.dart';
@@ -133,6 +134,11 @@ final goRouterProvider = Provider<GoRouter>((ref) {
         builder: (context, state) => AddEditGoalScreen(goalId: state.pathParameters['id']),
       ),
       GoRoute(
+        path: '/goal/:id',
+        parentNavigatorKey: _rootNavigatorKey,
+        builder: (context, state) => GoalDetailScreen(goalId: state.pathParameters['id']!),
+      ),
+      GoRoute(
         path: '/budget/add',
         parentNavigatorKey: _rootNavigatorKey,
         builder: (context, state) => const AddEditBudgetScreen(),
@@ -190,12 +196,23 @@ final goRouterProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: '/transaction/entry',
         parentNavigatorKey: _rootNavigatorKey,
-        builder: (context, state) => const TransactionEntryScreen(),
+        builder: (context, state) {
+          final extra = state.extra as Map<String, dynamic>?;
+          return TransactionEntryScreen(
+            prefilledType: extra?['type'] as String?,
+            prefilledTargetGoalId: extra?['targetGoalId'] as String?,
+            prefilledSourceWalletId: extra?['sourceWalletId'] as String?,
+            prefilledTargetWalletId: extra?['targetWalletId'] as String?,
+          );
+        },
       ),
       GoRoute(
         path: '/transaction/success',
         parentNavigatorKey: _rootNavigatorKey,
-        builder: (context, state) => const TransactionSuccessScreen(),
+        builder: (context, state) {
+          final extra = state.extra as Map<String, dynamic>?;
+          return TransactionSuccessScreen(returnTo: extra?['returnTo'] as String?);
+        },
       ),
       GoRoute(
         path: '/transaction/history',

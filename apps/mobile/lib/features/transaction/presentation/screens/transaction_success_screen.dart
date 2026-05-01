@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../core/theme/app_colors.dart';
-import 'dart:math';
 
 class TransactionSuccessScreen extends StatefulWidget {
-  const TransactionSuccessScreen({super.key});
+  final String? returnTo;
+
+  const TransactionSuccessScreen({super.key, this.returnTo});
 
   @override
   State<TransactionSuccessScreen> createState() => _TransactionSuccessScreenState();
@@ -32,6 +33,8 @@ class _TransactionSuccessScreenState extends State<TransactionSuccessScreen> wit
 
   @override
   Widget build(BuildContext context) {
+    final hasReturnTo = widget.returnTo != null && widget.returnTo!.isNotEmpty;
+
     return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(
@@ -81,17 +84,39 @@ class _TransactionSuccessScreenState extends State<TransactionSuccessScreen> wit
             ),
             Padding(
               padding: const EdgeInsets.all(24.0),
-              child: SizedBox(
-                width: double.infinity,
-                child: ElevatedButton(
-                  onPressed: () => context.go('/home'),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors.primary,
-                    padding: const EdgeInsets.symmetric(vertical: 16),
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+              child: Column(
+                children: [
+                  if (hasReturnTo)
+                    SizedBox(
+                      width: double.infinity,
+                      child: ElevatedButton(
+                        onPressed: () => context.go(widget.returnTo!),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.black,
+                          padding: const EdgeInsets.symmetric(vertical: 16),
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                        ),
+                        child: const Text('Kembali ke Goal', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white)),
+                      ),
+                    ),
+                  if (hasReturnTo) const SizedBox(height: 12),
+                  SizedBox(
+                    width: double.infinity,
+                    child: ElevatedButton(
+                      onPressed: () => context.go('/home'),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: hasReturnTo ? Colors.grey.shade100 : AppColors.primary,
+                        padding: const EdgeInsets.symmetric(vertical: 16),
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                        elevation: 0,
+                      ),
+                      child: Text(
+                        hasReturnTo ? 'Ke Beranda' : 'Selesai',
+                        style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: hasReturnTo ? Colors.black : Colors.black),
+                      ),
+                    ),
                   ),
-                  child: const Text('Selesai', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.black)),
-                ),
+                ],
               ),
             ),
           ],

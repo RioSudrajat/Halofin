@@ -135,6 +135,22 @@ class TransactionsNotifier extends Notifier<List<TransactionModel>> {
   void addTransaction(TransactionModel transaction) {
     state = [transaction, ...state];
     
+    // Check for reverse goal transfer: source is 'goal:<goalId>:<walletId>'
+    if (transaction.type == 'transfer' && transaction.walletId.startsWith('goal:')) {
+      final parts = transaction.walletId.split(':');
+      if (parts.length == 3) {
+        final goalId = parts[1];
+        final sourceWalletId = parts[2];
+        // Remove savings from goal
+        ref.read(goalsProvider.notifier).removeSavings(goalId, sourceWalletId, transaction.amount);
+        // Add back to the target wallet
+        if (transaction.targetWalletId != null) {
+          ref.read(walletsProvider.notifier).updateBalance(transaction.targetWalletId!, transaction.amount, isExpense: false);
+        }
+      }
+      return;
+    }
+
     // Update wallet balance automatically
     if (transaction.type == 'expense') {
       ref.read(walletsProvider.notifier).updateBalance(transaction.walletId, transaction.amount, isExpense: true);
