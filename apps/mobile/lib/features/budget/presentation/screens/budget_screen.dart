@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../core/theme/app_colors.dart';
@@ -265,39 +264,82 @@ class _BudgetContent extends ConsumerWidget {
                     ? (budget.spentAmount / budget.totalAmount).clamp(0.0, 1.0)
                     : 0.0;
 
-                return Slidable(
-                  key: ValueKey(budget.id),
-                  startActionPane: ActionPane(
-                    motion: const DrawerMotion(),
-                    extentRatio: 0.25,
-                    children: [
-                      SlidableAction(
-                        onPressed: (_) => ref
-                            .read(budgetsProvider.notifier)
-                            .removeBudget(budget.id),
-                        backgroundColor: Colors.red,
-                        foregroundColor: Colors.white,
-                        icon: Icons.delete,
-                        label: 'Hapus',
-                        borderRadius: BorderRadius.circular(24),
-                      ),
-                    ],
+                return Dismissible(
+                  key: Key(budget.id),
+                  background: Container(
+                    margin: const EdgeInsets.only(bottom: AppSpacing.md),
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                    decoration: BoxDecoration(
+                      color: Colors.red,
+                      borderRadius: BorderRadius.circular(24),
+                    ),
+                    alignment: Alignment.centerLeft,
+                    child: const Icon(Icons.delete, color: Colors.white),
                   ),
-                  endActionPane: ActionPane(
-                    motion: const DrawerMotion(),
-                    extentRatio: 0.25,
-                    children: [
-                      SlidableAction(
-                        onPressed: (_) =>
-                            context.push('/budget/edit/${budget.id}'),
-                        backgroundColor: Colors.blue,
-                        foregroundColor: Colors.white,
-                        icon: Icons.edit,
-                        label: 'Edit',
-                        borderRadius: BorderRadius.circular(24),
-                      ),
-                    ],
+                  secondaryBackground: Container(
+                    margin: const EdgeInsets.only(bottom: AppSpacing.md),
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                    decoration: BoxDecoration(
+                      color: Colors.blue,
+                      borderRadius: BorderRadius.circular(24),
+                    ),
+                    alignment: Alignment.centerRight,
+                    child: const Icon(Icons.edit, color: Colors.white),
                   ),
+                  confirmDismiss: (direction) async {
+                    if (direction == DismissDirection.endToStart) {
+                      context.push('/budget/edit/${budget.id}');
+                      return false;
+                    } else if (direction == DismissDirection.startToEnd) {
+                      final confirm = await showDialog<bool>(
+                        context: context,
+                        builder: (ctx) => AlertDialog(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          title: const Text(
+                            'Hapus Budget',
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 16,
+                            ),
+                          ),
+                          content: Text(
+                            'Apakah kamu yakin akan menghapus "${budget.name}"?',
+                          ),
+                          actions: [
+                            TextButton(
+                              onPressed: () => Navigator.of(ctx).pop(false),
+                              child: Text(
+                                'Batal',
+                                style: TextStyle(
+                                  color: Colors.grey.shade600,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                            ),
+                            TextButton(
+                              onPressed: () => Navigator.of(ctx).pop(true),
+                              child: const Text(
+                                'Hapus',
+                                style: TextStyle(
+                                  color: Colors.red,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      );
+                      return confirm == true;
+                    }
+                    return false;
+                  },
+                  onDismissed: (direction) {
+                    if (direction == DismissDirection.startToEnd) {
+                      ref.read(budgetsProvider.notifier).removeBudget(budget.id);
+                    }
+                  },
                   child: _buildCategoryCard(
                     context,
                     name: budget.name,
@@ -1032,7 +1074,47 @@ class _BillsContent extends ConsumerWidget {
                       context.push('/bill/edit/${bill.id}');
                       return false;
                     } else if (direction == DismissDirection.startToEnd) {
-                      return true;
+                      final confirm = await showDialog<bool>(
+                        context: context,
+                        builder: (ctx) => AlertDialog(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          title: const Text(
+                            'Hapus Bill',
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 16,
+                            ),
+                          ),
+                          content: Text(
+                            'Apakah kamu yakin akan menghapus "${bill.name}"?',
+                          ),
+                          actions: [
+                            TextButton(
+                              onPressed: () => Navigator.of(ctx).pop(false),
+                              child: Text(
+                                'Batal',
+                                style: TextStyle(
+                                  color: Colors.grey.shade600,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                            ),
+                            TextButton(
+                              onPressed: () => Navigator.of(ctx).pop(true),
+                              child: const Text(
+                                'Hapus',
+                                style: TextStyle(
+                                  color: Colors.red,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      );
+                      return confirm == true;
                     }
                     return false;
                   },
@@ -1116,7 +1198,47 @@ class _BillsContent extends ConsumerWidget {
                           context.push('/bill/edit/${bill.id}');
                           return false;
                         } else if (direction == DismissDirection.startToEnd) {
-                          return true;
+                          final confirm = await showDialog<bool>(
+                            context: context,
+                            builder: (ctx) => AlertDialog(
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(20),
+                              ),
+                              title: const Text(
+                                'Hapus Bill',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 16,
+                                ),
+                              ),
+                              content: Text(
+                                'Apakah kamu yakin akan menghapus "${bill.name}"?',
+                              ),
+                              actions: [
+                                TextButton(
+                                  onPressed: () => Navigator.of(ctx).pop(false),
+                                  child: Text(
+                                    'Batal',
+                                    style: TextStyle(
+                                      color: Colors.grey.shade600,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
+                                ),
+                                TextButton(
+                                  onPressed: () => Navigator.of(ctx).pop(true),
+                                  child: const Text(
+                                    'Hapus',
+                                    style: TextStyle(
+                                      color: Colors.red,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          );
+                          return confirm == true;
                         }
                         return false;
                       },

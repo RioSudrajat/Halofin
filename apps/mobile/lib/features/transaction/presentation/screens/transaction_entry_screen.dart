@@ -31,7 +31,7 @@ class TransactionEntryScreen extends ConsumerStatefulWidget {
 }
 
 class _TransactionEntryScreenState extends ConsumerState<TransactionEntryScreen>
-    with SingleTickerProviderStateMixin {
+    with TickerProviderStateMixin {
   String _type = 'Pengeluaran';
   DateTime _selectedDate = DateTime.now();
   String _dateString = 'Hari Ini';
@@ -52,6 +52,7 @@ class _TransactionEntryScreenState extends ConsumerState<TransactionEntryScreen>
   double _sheetProgress = 0;
   late AnimationController _snapBackController;
   late Animation<double> _sheetProgressAnimation;
+  late AnimationController _cursorBlinkController;
 
   final _categories = [
     'Makanan & minuman',
@@ -67,6 +68,11 @@ class _TransactionEntryScreenState extends ConsumerState<TransactionEntryScreen>
   @override
   void initState() {
     super.initState();
+    _cursorBlinkController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 530),
+    )..repeat(reverse: true);
+
     _snapBackController = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 280),
@@ -79,6 +85,10 @@ class _TransactionEntryScreenState extends ConsumerState<TransactionEntryScreen>
             setState(() => _sheetProgress = _sheetProgressAnimation.value);
           }
         });
+
+    _amountFocusNode.addListener(() {
+      if (mounted) setState(() {});
+    });
 
     _notesFocusNode.addListener(() {
       if (mounted) {
@@ -111,12 +121,15 @@ class _TransactionEntryScreenState extends ConsumerState<TransactionEntryScreen>
     _notesFocusNode.dispose();
     _sheetScrollController.dispose();
     _snapBackController.dispose();
+    _cursorBlinkController.dispose();
     super.dispose();
   }
 
   String get _displayAmount {
     final text = _amountController.text.replaceAll('.', '');
-    if (text.isEmpty) return '0';
+    if (text.isEmpty) {
+      return _amountFocusNode.hasFocus ? '' : '0';
+    }
     return _formatAmount(text);
   }
 
@@ -247,6 +260,7 @@ class _TransactionEntryScreenState extends ConsumerState<TransactionEntryScreen>
     final wallets = ref.watch(walletsProvider);
     final goals = ref.watch(goalsProvider);
     final filteredWallets = _getFilteredWallets(wallets);
+    final keyboardVisible = MediaQuery.viewInsetsOf(context).bottom > 0;
     final notesKeyboardLift = _notesFocusNode.hasFocus
         ? math.min(MediaQuery.viewInsetsOf(context).bottom, 320.0)
         : 0.0;
@@ -263,9 +277,7 @@ class _TransactionEntryScreenState extends ConsumerState<TransactionEntryScreen>
       resizeToAvoidBottomInset: false,
       backgroundColor: AppColors.primary,
       body: SafeArea(
-        child: AnimatedPadding(
-          duration: const Duration(milliseconds: 240),
-          curve: Curves.easeOutCubic,
+        child: Padding(
           padding: EdgeInsets.only(bottom: notesKeyboardLift),
           child: LayoutBuilder(
             builder: (context, constraints) {
@@ -283,7 +295,9 @@ class _TransactionEntryScreenState extends ConsumerState<TransactionEntryScreen>
                 children: [
                   Positioned.fill(
                     child: _buildEntryBackdrop(
-                      bottomInset: collapsedSheetHeight - 12,
+                      bottomInset: keyboardVisible
+                          ? math.max(collapsedSheetHeight - 12 - notesKeyboardLift, 0.0)
+                          : collapsedSheetHeight - 12,
                       wallets: wallets,
                     ),
                   ),
@@ -313,8 +327,9 @@ class _TransactionEntryScreenState extends ConsumerState<TransactionEntryScreen>
   }) {
     return Padding(
       padding: EdgeInsets.only(bottom: bottomInset),
-      child: Column(
-        children: [
+      child: ClipRect(
+        child: Column(
+          children: [
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
             child: Row(
@@ -553,7 +568,7 @@ class _TransactionEntryScreenState extends ConsumerState<TransactionEntryScreen>
               ),
             ),
           ),
-          Expanded(
+          Flexible(
             child: GestureDetector(
               onTap: () => _amountFocusNode.requestFocus(),
               child: Center(
@@ -588,14 +603,34 @@ class _TransactionEntryScreenState extends ConsumerState<TransactionEntryScreen>
                           ),
                           FittedBox(
                             fit: BoxFit.scaleDown,
-                            child: Text(
-                              _displayAmount,
-                              style: const TextStyle(
-                                fontSize: 56,
-                                fontWeight: FontWeight.w900,
-                                color: Colors.black,
-                              ),
-                              textAlign: TextAlign.center,
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                if (_displayAmount.isNotEmpty)
+                                  Text(
+                                    _displayAmount,
+                                    style: const TextStyle(
+                                      fontSize: 56,
+                                      fontWeight: FontWeight.w900,
+                                      color: Colors.black,
+                                    ),
+                                    textAlign: TextAlign.center,
+                                  ),
+                                if (_amountFocusNode.hasFocus)
+                                  FadeTransition(
+                                    opacity: _cursorBlinkController,
+                                    child: Container(
+                                      width: 3,
+                                      height: 48,
+                                      margin: const EdgeInsets.only(left: 2),
+                                      decoration: BoxDecoration(
+                                        color: Colors.black,
+                                        borderRadius: BorderRadius.circular(2),
+                                      ),
+                                    ),
+                                  ),
+                              ],
                             ),
                           ),
                         ],
@@ -639,6 +674,7 @@ class _TransactionEntryScreenState extends ConsumerState<TransactionEntryScreen>
           ),
           const SizedBox(height: 16),
         ],
+        ),
       ),
     );
   }
@@ -860,6 +896,9 @@ class _TransactionEntryScreenState extends ConsumerState<TransactionEntryScreen>
             minLines: 3,
             maxLines: 5,
             textInputAction: TextInputAction.newline,
+            cursorColor: AppColors.primaryDark,
+            cursorWidth: 2.5,
+            cursorRadius: const Radius.circular(2),
             onTap: _scrollSheetToNotes,
             decoration: InputDecoration(
               label: Row(
@@ -873,7 +912,9 @@ class _TransactionEntryScreenState extends ConsumerState<TransactionEntryScreen>
               hintText: 'Tambahkan catatan di sini...',
               hintStyle: TextStyle(fontSize: 13, color: Colors.grey.shade400),
               filled: true,
-              fillColor: Colors.grey.shade50,
+              fillColor: _notesFocusNode.hasFocus
+                  ? AppColors.primaryDark.withValues(alpha: 0.04)
+                  : Colors.grey.shade50,
               alignLabelWithHint: true,
               contentPadding: const EdgeInsets.symmetric(
                 horizontal: 16,
